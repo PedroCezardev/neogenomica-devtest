@@ -4,6 +4,7 @@ import { AppError } from '../middlewares/AppError';
 import { CreateCaixaDto, UpdateCaixaDto } from '../dtos/caixa.dto';
 
 export const caixaService = {
+  
   async findAll() {
     return caixaRepository.findAll();
   },

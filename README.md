@@ -1,183 +1,148 @@
-# Teste Dev 2026 🧬🧊
+# 🧬 NeoGenomica — Sistema de Gerenciamento de Microtubos de DNA
 
-Por que trabalhar na NeoGenomica ?
-===============================
-
-A NeoGenomica entra no mercado como um dos principais laboratórios do Brasil a oferecer tecnologia de sequenciamento genético de nova geração, focada na identificação, análise e diagnóstico de doenças raras. Além disso, disponibilizamos uma ampla gama de exames genéticos voltados para análises clínicas.
-
-Nossa equipe é composta por especialistas renomados — biomédicos, médicos e bioinformatas — que utilizam tecnologias de ponta para realizar testes genéticos. No dia a dia da bancada, manipulamos **milhares de microtubos de DNA** guardados em freezers, e hoje esse controle é feito em planilha. Queremos evoluir isso para uma ferramenta de verdade.
-
-Exemplos de armazenamento de amostras microtubos em freezer
-
-<table>
-  <tr>
-    <td width="50%"><img alt="Amostras em microtubos no freezer" src="https://github.com/user-attachments/assets/238380c8-8cfb-4c7d-8b6b-903973ea27b7" /></td>
-    <td width="50%"><img alt="Caixa/rack de microtubos" src="https://github.com/user-attachments/assets/5be62804-6403-42e8-bc47-b51b5f815159" /></td>
-  </tr>
-</table>
-
+Sistema **Full Stack** desenvolvido como solução ao desafio técnico NeoGenomica 2026.  
+Substitui o controle de estoque em planilha por uma aplicação web moderna, permitindo localizar amostras rapidamente e gerenciar onde cada microtubo está armazenado.
 
 ---
 
-## Teste técnico para processo seletivo NeoGenomica
+## ⚡ Quick Start
 
-## 🎯 Objetivo
+### Pré-requisitos
 
-Criar uma aplicação web **Full Stack** (front-end + back-end) para o **gerenciamento de estoque de microtubos de DNA** do nosso laboratório. Hoje fazemos isso em planilha (veja `amostras_exemplo.csv`); o objetivo é substituir a planilha por um sistema que organize onde cada amostra está guardada e ajude a bancada a **encontrar rapidamente uma amostra** e a **decidir onde guardar uma amostra nova**.
+- **Node.js** v18+
+- Conta no **[Supabase](https://supabase.com)** (banco PostgreSQL gerenciado)
 
-> ℹ️ **Sobre o nível:** este é um teste para uma vaga de **desenvolvedor(a) júnior**. Não esperamos que você entregue 100% dos itens. Foque em fazer bem os **Requisitos Obrigatórios**; os **Bônus** são para quem quiser se destacar. Avaliamos muito mais a **clareza do raciocínio e a organização do código** do que a quantidade de features.
+### Subindo o Backend
 
-> 🤖 **Uso de IA:** você **pode usar ferramentas de IA** (ChatGPT, Copilot, Claude etc.) — elas fazem parte do dia a dia. O que realmente importa é que **você entenda tudo o que foi construído** e saiba **explicar suas escolhas** na conversa técnica. Vamos conversar sobre o código e as decisões, então esteja preparado(a) para justificar como e por que fez cada parte.
+```bash
+# 1. Entrar na pasta do backend
+cd backend
+
+# 2. Instalar dependências
+npm install
+
+# 3. Configurar variáveis de ambiente
+cp .env.example .env
+# → edite o .env com suas credenciais do Supabase
+
+# 4. Rodar as migrações do banco
+npx prisma migrate dev
+
+# 5. Popular o banco com dados de exemplo (opcional)
+npm run seed
+
+# 6. Iniciar o servidor em desenvolvimento
+npm run dev
+# → API disponível em http://localhost:3001
+```
+
+### Subindo o Frontend
+
+```bash
+# Em breve — frontend em desenvolvimento
+cd frontend
+npm install
+npm run dev
+```
 
 ---
 
-## 🧊 Contexto e modelo de dados
+## 🏗️ Stack Tecnológico
 
-As amostras são guardadas seguindo uma **hierarquia física**:
+| Camada | Tecnologia |
+|---|---|
+| **Frontend** | Next.js 14 (App Router) + TypeScript |
+| **Backend** | Node.js + Express + TypeScript |
+| **Banco de Dados** | PostgreSQL via Supabase |
+| **ORM** | Prisma 6 |
+| **Autenticação** | JWT + bcrypt |
+| **Validação** | Zod |
+
+---
+
+## 📁 Estrutura do Projeto
 
 ```
-Sala/Local  (ex.: "Pré-PCR", "Pós-PCR")
-  └── Freezer            (ex.: "-20°C Amostras", "-80°C")   → tem um limite máximo de gavetas
-        └── Gaveta/Rack                                     → tem um limite máximo de caixas
-              └── Caixa   (uma grade de posições)           → o tamanho é definido ao criar (linhas × colunas)
-                    └── Posição  (ex.: A1, B2 ...)          → guarda 1 microtubo (1 amostra) ou está livre
+neogenomica-devtest/
+├── backend/                  # API REST Express + TypeScript
+│   ├── src/
+│   │   ├── controllers/      # Camada HTTP (entrada/saída)
+│   │   ├── services/         # Regras de negócio
+│   │   ├── repositories/     # Acesso ao banco (Prisma)
+│   │   ├── dtos/             # Schemas de validação (Zod)
+│   │   ├── middlewares/      # Auth JWT, Error Handler
+│   │   ├── routes/           # Definição de rotas
+│   │   ├── utils/            # Utilitários compartilhados
+│   │   └── lib/              # Singleton do Prisma Client
+│   └── prisma/
+│       ├── schema.prisma     # Modelo de dados
+│       ├── migrations/       # Histórico de migrações SQL
+│       └── seed.ts           # Script para popular o banco
+│
+├── frontend/                 # (em desenvolvimento)
+├── README.md                 # Este arquivo
+├── README-desafio.md         # Enunciado original do desafio
+└── amostras_exemplo.csv      # Dados reais de exemplo para seed/import
 ```
 
-Cada **Caixa** é uma grade. O tamanho é **definido pelo usuário ao criar** — no nosso lab usamos caixas de vários tamanhos (ex.: `9×9`, `10×10`, e também caixas menores como `4×4` ou `8×8`). As posições são identificadas por **linha (letra) + coluna (número)**: `A1`, `A2`, ... `B1` ...
+---
 
-Cada **Amostra / microtubo** tem, no mínimo:
+## 🧊 Hierarquia de Armazenamento
 
-| Campo | Exemplo | Observações |
+O sistema segue a hierarquia física real do laboratório:
+
+```
+Sala  →  Freezer  →  Gaveta  →  Caixa (grade N×M)  →  Posição (A1, B3...)  →  Amostra
+```
+
+---
+
+## 🔌 API — Visão Geral das Rotas
+
+| Módulo | Prefixo | Descrição |
 |---|---|---|
-| `codigo_amostra` | `A0100100049801` | identificador da amostra (**único**) |
-| `paciente_nome` | `CONTROLE NEO 136` | nome/identificação |
-| `concentracao_ng_ul` | `52.8` | concentração em ng/µL |
-| `material` | `DNA` / `Swab bucal` | tipo de material |
-| `exame` | `CONTROLE INTERNO` | exame associado (opcional) |
-| `observacao` | texto livre | opcional |
+| Auth | `/api/auth` | Registro, login, perfil |
+| Salas | `/api/salas` | CRUD de salas |
+| Freezers | `/api/freezers` | CRUD de freezers |
+| Gavetas | `/api/gavetas` | CRUD de gavetas |
+| Caixas | `/api/caixas` | CRUD + mapa visual da grade |
+| Amostras | `/api/amostras` | CRUD + busca + sugestão first-fit + importação CSV |
 
-### Sugestão de modelagem (opcional)
-
-Como referência, as **entidades** e suas **relações** seguem a hierarquia física:
-
-```
-Sala 1─N Freezer 1─N Gaveta 1─N Caixa 1─N Posição 0..1─ Amostra
-```
-
-- **Sala** possui vários **Freezers**
-- **Freezer** possui várias **Gavetas**
-- **Gaveta** possui várias **Caixas**
-- **Caixa** possui várias **Posições** (definidas pelo tamanho linhas × colunas)
-- Cada **Posição** guarda **no máximo uma Amostra** (ou está livre)
-
-> 🧩 A modelagem de campos, tipos e como você representa a **Posição** (tabela própria x calculada a partir do tamanho da caixa) é **livre** — construa a sua. Essa é uma das coisas que vamos conversar na entrevista.
+> 📄 **Documentação completa do backend:** [`backend/Backend-Documentation.md`](./backend/Backend-Documentation.md)  
+> Contém: todos os endpoints, payloads, variáveis de ambiente, dependências, arquitetura detalhada e fluxo de dados.
 
 ---
 
-## 🛠️ Requisitos Obrigatórios
+## ✅ Funcionalidades Implementadas
 
-1. **Cadastro da estrutura física (CRUD)**
-   - Criar/editar/remover **Salas**, **Freezers**, **Gavetas** e **Caixas**.
-   - Ao criar uma **Caixa**, o usuário **define o tamanho** (nº de linhas e nº de colunas).
+### Requisitos Obrigatórios
+- [x] CRUD completo de Salas, Freezers, Gavetas e Caixas
+- [x] Cadastro de amostras com validação de posição
+- [x] **Sugestão automática de posição** (algoritmo First-Fit)
+- [x] Busca e listagem de amostras com localização completa
 
-2. **Cadastro de amostras**
-   - Adicionar uma amostra ao sistema com os campos acima.
-
-3. **Sugestão automática de posição** ⭐ *(o coração do teste)*
-   - Ao adicionar uma amostra, o sistema deve **sugerir automaticamente uma posição livre** e informar o **caminho completo**: `Sala → Freezer → Gaveta → Caixa → Posição` (ex.: `Pré-PCR / -20°C / Gaveta 1 / CX-CONTROLE / C3`).
-   - Se **não houver nenhuma posição livre** nas caixas existentes, o sistema deve **avisar que é preciso abrir uma nova caixa** para poder alocar a amostra.
-   - **Regra de alocação (first-fit)** — implemente exatamente assim para não haver ambiguidade:
-     1. Percorra as caixas existentes numa ordem **determinística** (ex.: por data de criação, ou ordem alfabética do nome).
-     2. Dentro de uma caixa, percorra as posições em ordem **linha a linha** (`A1, A2, …, A{n}, B1, …`) e escolha a **primeira posição livre**.
-     3. Se a caixa estiver cheia, passe para a próxima; se **todas** estiverem cheias, retorne "**abrir nova caixa**".
-
-4. **Visualização para encontrar uma amostra**
-   - Pelo menos **uma** forma de listar/buscar as amostras e ver **onde cada uma está** (Sala/Freezer/Gaveta/Caixa/Posição).
-   - Pode ser **tabela** ou **lista** com busca por `codigo_amostra` ou `paciente_nome`.
-
-5. **README de execução**
-   - A aplicação roda localmente, com instruções claras de como subir back-end, front-end e banco.
+### Bônus
+- [x] Limites de capacidade (max gavetas/freezer, max caixas/gaveta)
+- [x] Mapa visual da grade da caixa (`GET /api/caixas/:id/mapa`)
+- [x] Importação via CSV (`POST /api/amostras/importar`)
+- [x] Autenticação JWT
+- [x] Busca/filtro avançado por material, exame, código, nome
 
 ---
 
-## ⭐ Requisitos Bônus (diferenciais)
+## 🌱 Seed de Dados
 
-1. **Limites de capacidade**
-   - Definir **máximo de caixas por gaveta** e **máximo de gavetas por freezer**, e **impedir/avisar** quando o limite for atingido.
-   - Ao sugerir "abrir nova caixa", respeitar esses limites (sugerir em qual gaveta/freezer a nova caixa caberia).
+Para popular o banco com os dados reais do laboratório (arquivo `amostras_exemplo.csv`):
 
-2. **Visualização em MAPA** 🗺️ *(o bônus mais legal)*
-   - Uma forma **visual** de enxergar a estrutura como a bancada veria de verdade: uma caixa desenhada como grade, posições ocupadas x livres, e ao clicar numa posição ver a amostra.
-   - Use sua criatividade: mapa da caixa, "heatmap" de ocupação por freezer/gaveta, mini-mapa navegável. Surpreenda-nos.
-
-3. **Importação via CSV**
-   - Importar amostras a partir de um `.csv` (use o `amostras_exemplo.csv` como referência).
-
-4. **Autenticação**
-   - Login para acessar o sistema; ações de escrita exigem estar autenticado.
-
-5. **Busca/filtro avançado**
-   - Filtrar por freezer, gaveta, exame, material, ou posições livres.
-
----
-
-## 🔧 Requisitos Técnicos
-
-- Use o stack que preferir. Sugestões (não obrigatórias):
-  - **Front-end:** React, Vue.js ou Angular
-  - **Back-end:** Node/Express, Ruby on Rails, Python (FastAPI/Django) ou similar
-  - **Banco de dados:** PostgreSQL ou outro relacional
-- A aplicação deve rodar localmente com instruções claras no `README`.
-
----
-
-## 📦 Entrega
-
-1. Faça um **fork** deste repositório.
-2. Desenvolva sua solução em um branch chamado `develop`.
-3. Envie o **link do seu repositório** com instruções de execução no `README`.
-
----
-
-## 🚀 Segundo Desafio — Estratégia de CI/CD (apresentação)
-
-A segunda parte é uma **apresentação de até 15 minutos** (máximo **5 slides**), discutida numa chamada com os entrevistadores. **Não é para escrever código** — queremos entender **como você pensaria** o deploy dessa aplicação.
-
-**Descreva o fluxo de CI/CD que você montaria**, abordando:
-
-- **Estratégia de branches** (ex.: `main`/`develop`/`feature/*`, trunk-based, GitFlow — e por quê).
-- **Fluxo até produção**: o que acontece de um commit até o deploy? Quais ambientes (dev/staging/prod)?
-- **Pull Request: exige ou não?** Quem revisa? Precisa de aprovação?
-- **Testes: rodaria testes automatizados? Quais** (unit, integração, e2e, lint)? São **obrigatórios** para mergear/deployar, ou não? Por quê?
-- **O que o pipeline faria** em cada etapa (build, testes, deploy) e **como um deploy é disparado** (automático no merge? manual?).
-
-Pode usar slides ou diagramas. Não existe resposta única certa — queremos ver seu **raciocínio e as escolhas** (e trade-offs) que você faria para um time pequeno de laboratório.
-
-**Duração:** apresentação até 15 min + 5 min de perguntas.
-
----
-
-## ✅ Critérios de Avaliação
-
-- Clareza e organização do código
-- Boas práticas de desenvolvimento
-- Cobertura dos requisitos obrigatórios (e bônus, se houver)
-- Correção da **regra de sugestão de posição**
-- Facilidade de uso da interface (a bancada consegue achar uma amostra rápido?)
-- Capacidade de argumentação técnica na apresentação de CI/CD
-
----
-
-## 📄 Dados de exemplo
-
-Incluímos `amostras_exemplo.csv` — um recorte **real** (anonimizável) do nosso controle atual em planilha, já limpo em UTF-8. Colunas:
-
-```csv
-sala,freezer,gaveta,caixa,linhas,colunas,posicao,codigo_amostra,paciente_nome,concentracao_ng_ul,material,exame,observacao
+```bash
+cd backend
+npm run seed
 ```
 
-Use-o para popular o sistema (seed) e/ou para testar a importação via CSV (bônus).
+O seed é **idempotente** — pode ser executado múltiplas vezes sem duplicar dados.
 
 ---
 
-Para finalizar, faça o commit de todo o seu projeto no seu repositório **forkeado (bifurcado)** e nos envie o link junto à sua resposta. Boa sorte! 🍀
+## 👤 Autor
+
+**Pedro Cezar** — Processo Seletivo NeoGenomica 2026

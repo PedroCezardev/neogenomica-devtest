@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "csv-parse": "^7.0.2",
+    "multer": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/multer": "^2.2.0"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "scripts": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}

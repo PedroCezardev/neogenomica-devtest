@@ -1,13 +1,19 @@
 import { Router } from 'express';
 import { amostraController } from '../controllers/amostra.controller';
 import { sugestaoController } from '../controllers/sugestao.controller';
+import { importacaoController } from '../controllers/importacao.controller';
 
 const router = Router();
 
-// ⚠️ Rota específica DEVE vir antes de /:id — senão Express interpreta "sugerir-posicao" como um ID
+// Rotas específicas antes de /:id, evita conflito de parâmetros no Express
 router.get('/sugerir-posicao', sugestaoController.sugerir);
+router.post(
+  '/importar',
+  importacaoController.uploadMiddleware,
+  importacaoController.importar
+);
 
-// CRUD básico (suporta filtros: ?codigoAmostra=&pacienteNome=&material=&exame=&caixaId=)
+// CRUD básico, suporta filtros: ?codigoAmostra=&pacienteNome=&material=&exame=&caixaId=
 router.get('/', amostraController.findAll);
 router.get('/:id', amostraController.findById);
 router.post('/', amostraController.create);
