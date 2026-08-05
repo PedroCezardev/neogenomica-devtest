@@ -1,0 +1,29 @@
+# ─── Dependências ───
+node_modules/
+.npm
+
+# ─── Build ───
+dist/
+build/
+.next/
+out/
+
+# ─── Variáveis de ambiente (NUNCA commitar o .env real) ───
+.env
+.env.local
+.env.*.local
+
+# ─── Prisma ───
+# Não commitar o client gerado (é gerado no deploy)
+
+# ─── Logs ───
+*.log
+npm-debug.log*
+
+# ─── OS ───
+.DS_Store
+Thumbs.db
+
+# ─── IDE ───
+.vscode/settings.json
+.idea/
