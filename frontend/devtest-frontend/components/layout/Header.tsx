@@ -39,21 +39,13 @@ const ChevronIcon = () => (
 );
 
 // ─── Componente principal ─────────────────────────────────────────────────
+import { useAuth } from '@/contexts/AuthContext';
+
 export default function Header() {
   const pathname = usePathname();
   const title = getTitle(pathname);
   const [search, setSearch] = useState('');
-  const [usuario, setUsuario] = useState<{ nome: string } | null>(null);
-
-  // Carrega o usuário logado do localStorage
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem('neo_usuario');
-      if (raw) setUsuario(JSON.parse(raw));
-    } catch {
-      // ignora erro de parse
-    }
-  }, []);
+  const { usuario } = useAuth();
 
   // Iniciais do usuário para o avatar
   const initials = usuario?.nome
@@ -62,6 +54,7 @@ export default function Header() {
     .map((n) => n[0])
     .join('')
     .toUpperCase() ?? 'U';
+
 
   return (
     <header className="h-16 bg-card border-b border-border flex items-center px-6 gap-4 sticky top-0 z-20 shadow-sm">

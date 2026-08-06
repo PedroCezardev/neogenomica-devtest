@@ -60,20 +60,18 @@ const navItems = [
   },
 ];
 
+import { useAuth } from '@/contexts/AuthContext';
+
 // ─── Componente principal ─────────────────────────────────────────────────
 export default function Sidebar() {
   const pathname = usePathname();
+  const { logout } = useAuth();
 
   function isActive(href: string, exact: boolean): boolean {
     if (exact) return pathname === href;
     return pathname === href || pathname.startsWith(href + '/');
   }
 
-  function handleLogout() {
-    localStorage.removeItem('neo_token');
-    localStorage.removeItem('neo_usuario');
-    window.location.href = '/login';
-  }
 
   return (
     <aside className="w-60 h-screen bg-sidebar fixed left-0 top-0 flex flex-col z-30">
@@ -81,9 +79,9 @@ export default function Sidebar() {
       {/* ── Logo ── */}
       <div className="px-5 py-5 border-b border-white/10">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="relative w-32 h-8">
+          <div className="relative w-50 h-10">
             <Image
-              src="/neogenomica-white"
+              src="/neogenomica-white.svg"
               alt="NeoGenomica"
               fill
               className="object-contain object-left"
@@ -148,7 +146,7 @@ export default function Sidebar() {
         {/* Logout */}
         <button
           id="btn-logout"
-          onClick={handleLogout}
+          onClick={logout}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg w-full text-sm font-medium text-white/40 hover:text-white hover:bg-white/8 transition-all duration-150"
         >
           <LogoutIcon />
