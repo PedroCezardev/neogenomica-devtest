@@ -1,4 +1,4 @@
-// ─── Estrutura Física ─────────────────────────────────────────────────────
+// Estrutura Física
 
 export interface Sala {
   id: number;
@@ -46,7 +46,7 @@ export interface Caixa {
   _count?: { amostras: number };
 }
 
-// ─── Amostra ──────────────────────────────────────────────────────────────
+// Amostra 
 
 export interface Amostra {
   id: number;
@@ -56,7 +56,7 @@ export interface Amostra {
   material: string;
   exame: string | null;
   observacao: string | null;
-  posicao: string; // ex: "A1", "C3"
+  posicao: string;
   caixaId: number;
   criadoEm: string;
   atualizadoEm: string;
@@ -72,7 +72,7 @@ export interface AmostraFiltros {
   caixaId?: number;
 }
 
-// ─── Auth ─────────────────────────────────────────────────────────────────
+// Auth
 
 export interface Usuario {
   id: number;
@@ -90,7 +90,7 @@ export interface AuthResponse {
   };
 }
 
-// ─── First-Fit ────────────────────────────────────────────────────────────
+// First-Fit
 
 export type SugestaoResponse =
   | {
@@ -107,7 +107,7 @@ export type SugestaoResponse =
       sugestaoGaveta: Gaveta | null;
     };
 
-// ─── Mapa da Caixa ────────────────────────────────────────────────────────
+// Mapa da Caixa
 
 export interface CelulaMapa {
   posicao: string;
@@ -134,7 +134,7 @@ export interface MapaCaixa {
   grade: CelulaMapa[];
 }
 
-// ─── Importação CSV ───────────────────────────────────────────────────────
+// Importação CSV
 
 export interface ImportacaoResult {
   mensagem: string;
@@ -144,7 +144,7 @@ export interface ImportacaoResult {
   erros: Array<{ linha: number; motivo: string }>;
 }
 
-// ─── Erros da API ─────────────────────────────────────────────────────────
+// Erros da API
 
 export interface ApiErrorBody {
   erro: string;
