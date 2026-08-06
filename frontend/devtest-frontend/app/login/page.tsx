@@ -57,24 +57,25 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen w-full bg-content flex items-center justify-center p-4 md:p-8">
-      {/* Container principal (Card de Login estilo referência) */}
-      <div className="w-full max-w-4xl bg-card rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-border/50 animate-scale-in">
+      
+      {/* Container principal */}
+      <div className="w-full max-w-5xl bg-card rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-border/50 animate-scale-in p-3 md:p-4 gap-2 md:gap-4">
 
-        {/* ── LADO ESQUERDO: Imagem & Marca ── */}
-        <div className="relative w-full md:w-1/2 min-h-[320px] md:min-h-[560px] p-6 md:p-10 flex flex-col justify-between overflow-hidden bg-neo-darkest">
-          {/* Imagem de fundo customizada */}
+        {/* LADO ESQUERDO */}
+        <div className="relative w-full md:w-1/2 min-h-[320px] md:min-h-[560px] p-6 md:p-10 flex flex-col justify-between overflow-hidden rounded-2xl md:rounded-3xl shadow-md">
+
           <Image
             src="/image-login.png"
             alt="NeoGenomica DNA Background"
             fill
-            className="object-cover opacity-90 transition-scale duration-700 hover:scale-105"
+            className="object-cover transition-transform duration-700 hover:scale-105"
             priority
           />
 
           {/* Overlay com gradiente suave */}
-          <div className="absolute inset-0 bg-gradient-to-t from-neo-darkest/95 via-neo-darkest/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-neo-darkest/75 via-neo-darkest/20 to-transparent" />
 
-          {/* Topo sobre a imagem: Logo da empresa */}
+          {/* Logo da empresa */}
           <div className="relative z-10">
             <div className="relative w-40 h-10">
               <Image
@@ -87,23 +88,21 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Rodapé sobre a imagem: Texto inspirador de referência */}
           <div className="relative z-10 mt-auto text-white">
-            <span className="text-xs font-semibold uppercase tracking-wider text-neo-teal bg-neo-dark/60 px-3 py-1 rounded-full border border-neo-teal/30 inline-block mb-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-white py-1 inline-block mb-3">
               Tecnologia & Genética
             </span>
             <h2 className="text-2xl md:text-3xl font-bold leading-tight tracking-tight">
               Gerenciamento inteligente de microtubos de DNA
             </h2>
-            <p className="text-sm text-white/70 mt-2 font-light leading-relaxed">
-              Localize amostras instantaneamente e acompanhe a hierarquia física dos freezers com precisão laboratorial.
-            </p>
           </div>
         </div>
 
-        {/* ── LADO DIREITO: Formulário ── */}
-        <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-card">
-
+        {/* LADO DIREITO */}
+        <div
+          key={isRegister ? 'register-mode' : 'login-mode'}
+          className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center bg-card animate-fade-in"
+        >
 
           {/* Cabeçalho do Form */}
           <div className="mb-6">
@@ -182,7 +181,7 @@ export default function LoginPage() {
                   </svg>
                 ) : (
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <path d="M1.5 12s4-8 10.5-8 10.5 8 10.5 8-4 8-10.5 8-10.5-8-10.5-8z"/>
                     <circle cx="12" cy="12" r="3"/>
                   </svg>
                 )}
@@ -223,4 +222,5 @@ export default function LoginPage() {
       </div>
     </div>
   );
+
 }
