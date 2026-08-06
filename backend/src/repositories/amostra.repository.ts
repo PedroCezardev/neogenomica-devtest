@@ -2,21 +2,34 @@ import prisma from '../lib/prisma';
 import { CreateAmostraDto, UpdateAmostraDto } from '../dtos/amostra.dto';
 
 export const amostraRepository = {
+  
   findAll(filtros?: {
+    busca?: string;
     codigoAmostra?: string;
     pacienteNome?: string;
     material?: string;
     exame?: string;
     caixaId?: number;
   }) {
+    const searchTerm = filtros?.busca || (filtros?.codigoAmostra === filtros?.pacienteNome ? filtros?.codigoAmostra : undefined);
+
     return prisma.amostra.findMany({
       where: {
-        ...(filtros?.codigoAmostra && {
-          codigoAmostra: { contains: filtros.codigoAmostra, mode: 'insensitive' },
-        }),
-        ...(filtros?.pacienteNome && {
-          pacienteNome: { contains: filtros.pacienteNome, mode: 'insensitive' },
-        }),
+        ...(searchTerm
+          ? {
+              OR: [
+                { codigoAmostra: { contains: searchTerm, mode: 'insensitive' } },
+                { pacienteNome: { contains: searchTerm, mode: 'insensitive' } },
+              ],
+            }
+          : {
+              ...(filtros?.codigoAmostra && {
+                codigoAmostra: { contains: filtros.codigoAmostra, mode: 'insensitive' },
+              }),
+              ...(filtros?.pacienteNome && {
+                pacienteNome: { contains: filtros.pacienteNome, mode: 'insensitive' },
+              }),
+            }),
         ...(filtros?.material && { material: filtros.material }),
         ...(filtros?.exame && { exame: { contains: filtros.exame, mode: 'insensitive' } }),
         ...(filtros?.caixaId && { caixaId: filtros.caixaId }),

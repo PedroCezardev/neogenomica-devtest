@@ -6,6 +6,7 @@ import { CreateAmostraDto, UpdateAmostraDto } from '../dtos/amostra.dto';
 
 export const amostraService = {
   async findAll(filtros?: {
+    busca?: string;
     codigoAmostra?: string;
     pacienteNome?: string;
     material?: string;

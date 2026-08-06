@@ -65,6 +65,7 @@ export interface Amostra {
 
 // Filtros para listagem de amostras
 export interface AmostraFiltros {
+  busca?: string;
   codigoAmostra?: string;
   pacienteNome?: string;
   material?: string;
