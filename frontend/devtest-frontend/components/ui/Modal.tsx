@@ -52,7 +52,7 @@ export default function Modal({
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-neo-darkest/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-neo-darkest/65 backdrop-blur-md transition-opacity rounded-2xl"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -60,8 +60,8 @@ export default function Modal({
       {/* Panel */}
       <div
         className={`
-          relative w-full ${sizes[size]} bg-card rounded-xl shadow-2xl
-          animate-scale-in flex flex-col max-h-[90vh]
+          relative w-full ${sizes[size]} bg-card rounded-2xl shadow-2xl
+          border border-border/80 animate-scale-in flex flex-col max-h-[90vh] z-10
         `}
       >
         {/* Header */}
