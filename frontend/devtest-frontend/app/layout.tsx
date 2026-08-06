@@ -13,11 +13,14 @@ export const metadata: Metadata = {
   description: 'Sistema de controle de microtubos de DNA por Pedro Cezar',
 };
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="pt-BR" className={`${montserrat.variable} h-full`}>
       <body className="min-h-full">{children}</body>
     </html>
   );
 }
-
