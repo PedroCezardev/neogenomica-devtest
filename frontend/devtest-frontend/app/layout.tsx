@@ -12,6 +12,9 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: 'NeoGenomica — Gerenciamento de Amostras',
   description: 'Sistema de controle de microtubos de DNA por Pedro Cezar',
+  icons: {
+    icon: '/icone-neogenomica.svg',
+  },
 };
 
 export default function RootLayout({

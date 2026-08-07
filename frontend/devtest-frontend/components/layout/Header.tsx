@@ -57,11 +57,11 @@ export default function Header() {
 
 
   return (
-    <header className="h-16 bg-card border-b border-border flex items-center px-6 gap-4 sticky top-0 z-20 shadow-sm">
+    <header className="h-16 shrink-0 bg-card border-b border-border flex items-center px-6 gap-4 sticky top-0 z-20 shadow-sm">
 
       {/* ── Título da página ── */}
-      <div className="flex-1">
-        <h1 className="text-base font-semibold text-text-primary">{title}</h1>
+      <div className="flex-1 min-w-0">
+        <h1 className="text-base font-semibold text-text-primary truncate">{title}</h1>
       </div>
 
       {/* ── Barra de busca ── */}
