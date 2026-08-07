@@ -70,8 +70,9 @@ export default function FreezerModal({
       }
       onSuccess();
       onClose();
-    } catch (err: any) {
-      setError(err?.message || 'Erro ao salvar freezer.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao salvar freezer.';
+      setError(msg);
     } finally {
       setLoading(false);
     }

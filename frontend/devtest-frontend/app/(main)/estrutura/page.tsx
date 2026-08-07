@@ -148,8 +148,9 @@ export default function EstruturaPage() {
 
       setItemToDelete(null);
       loadData();
-    } catch (err: any) {
-      alert(err?.message || 'Erro ao excluir item.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao excluir item.';
+      alert(msg);
     } finally {
       setDeleteLoading(false);
     }

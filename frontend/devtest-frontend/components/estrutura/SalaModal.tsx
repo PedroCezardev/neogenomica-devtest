@@ -51,8 +51,9 @@ export default function SalaModal({
       }
       onSuccess();
       onClose();
-    } catch (err: any) {
-      setError(err?.message || 'Erro ao salvar sala.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao salvar sala.';
+      setError(msg);
     } finally {
       setLoading(false);
     }

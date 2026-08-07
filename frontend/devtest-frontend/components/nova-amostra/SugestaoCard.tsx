@@ -145,8 +145,8 @@ export default function SugestaoCard({
           {sugestao.sugestaoGaveta && (
             <div className="pt-2 border-t border-amber-200/80 text-xs text-amber-900">
               💡 <strong>Sugestão de Expansão:</strong> Crie uma nova caixa na gaveta{' '}
-              <strong>"{sugestao.sugestaoGaveta.nome}"</strong> do freezer{' '}
-              <strong>"{sugestao.sugestaoGaveta.freezer?.nome}"</strong>.
+              <strong>&quot;{sugestao.sugestaoGaveta.nome}&quot;</strong> do freezer{' '}
+              <strong>&quot;{sugestao.sugestaoGaveta.freezer?.nome}&quot;</strong>.
             </div>
           )}
         </div>

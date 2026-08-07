@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import Badge, { materialVariant } from '@/components/ui/Badge';
 
 describe('Componente Badge e Utilitário materialVariant', () => {
-  
+
   it('deve renderizar o conteúdo do Badge corretamente', () => {
     render(<Badge variant="teal">DNA</Badge>);
     expect(screen.getByText('DNA')).toBeInTheDocument();

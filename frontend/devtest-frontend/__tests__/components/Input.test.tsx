@@ -32,5 +32,5 @@ describe('Componente Input', () => {
 
     expect(screen.getByText('Exemplo: A1, C3')).toBeInTheDocument();
   });
-  
+
 });

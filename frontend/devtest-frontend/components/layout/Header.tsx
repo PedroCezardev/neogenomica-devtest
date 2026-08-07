@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // ─── Mapa de título por rota ──────────────────────────────────────────────
 const pageTitles: Record<string, string> = {

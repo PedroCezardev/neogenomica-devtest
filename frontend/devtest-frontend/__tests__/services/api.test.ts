@@ -48,5 +48,5 @@ describe('Serviço de API e Manipulação de Erros', () => {
 
     await expect(post('/amostras', {})).rejects.toThrow(ApiError);
   });
-  
+
 });

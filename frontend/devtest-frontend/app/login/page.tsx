@@ -57,7 +57,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen w-full bg-content flex items-center justify-center p-4 md:p-8">
-      
+
       {/* Container principal */}
       <div className="w-full max-w-5xl bg-card rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-border/50 animate-scale-in p-3 md:p-4 gap-2 md:gap-4">
 

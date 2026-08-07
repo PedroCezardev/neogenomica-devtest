@@ -70,8 +70,9 @@ export default function GavetaModal({
       }
       onSuccess();
       onClose();
-    } catch (err: any) {
-      setError(err?.message || 'Erro ao salvar gaveta.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao salvar gaveta.';
+      setError(msg);
     } finally {
       setLoading(false);
     }

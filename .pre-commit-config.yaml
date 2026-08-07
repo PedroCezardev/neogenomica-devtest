@@ -1,0 +1,31 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: local
+    hooks:
+      - id: backend-tests
+        name: Backend Unit Tests (Vitest)
+        entry: npm --prefix backend test
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: frontend-tests
+        name: Frontend Unit Tests (Vitest)
+        entry: npm --prefix frontend/devtest-frontend test
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: frontend-lint
+        name: Frontend ESLint
+        entry: npm --prefix frontend/devtest-frontend run lint
+        language: system
+        pass_filenames: false
+        always_run: true

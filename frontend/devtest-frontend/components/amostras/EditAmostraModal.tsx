@@ -66,8 +66,9 @@ export default function EditAmostraModal({
 
       onSuccess();
       onClose();
-    } catch (err: any) {
-      setError(err?.message || 'Erro ao atualizar amostra.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao atualizar amostra.';
+      setError(msg);
     } finally {
       setLoading(false);
     }

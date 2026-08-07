@@ -245,7 +245,7 @@ export default function DashboardPage() {
 
           {/* Dica de Idempotência do Sistema */}
           <div className="p-3 rounded-xl bg-neo-lighter border border-border text-[11px] text-text-muted leading-relaxed">
-            <strong>Dica de Uso:</strong> Use o botão <strong>"Importar CSV"</strong> na página de Amostras para popular dados em lote sem duplicar registros.
+            <strong>Dica de Uso:</strong> Use o botão <strong>&quot;Importar CSV&quot;</strong> na página de Amostras para popular dados em lote sem duplicar registros.
           </div>
         </div>
 

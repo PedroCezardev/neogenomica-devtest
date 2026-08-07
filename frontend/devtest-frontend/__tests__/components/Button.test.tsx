@@ -37,5 +37,5 @@ describe('Componente Button', () => {
     expect(button).toBeDisabled();
     expect(button.querySelector('.animate-spin')).toBeInTheDocument();
   });
-  
+
 });

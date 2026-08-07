@@ -111,8 +111,9 @@ export default function AmostrasPage() {
       await amostraService.delete(amostraToDelete.id);
       setAmostraToDelete(null);
       loadAmostras();
-    } catch (err: any) {
-      alert(err?.message || 'Erro ao excluir amostra.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao excluir amostra.';
+      alert(msg);
     } finally {
       setDeleteLoading(false);
     }

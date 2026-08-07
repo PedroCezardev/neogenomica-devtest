@@ -1,6 +1,6 @@
 # 🧬 NeoGenomica — Sistema de Gerenciamento de Microtubos de DNA
 
-Sistema **Full Stack** desenvolvido como solução ao desafio técnico NeoGenomica 2026.  
+Sistema **Full Stack** desenvolvido como solução ao desafio técnico NeoGenomica 2026.
 Substitui o controle de estoque em planilha por uma aplicação web moderna, permitindo localizar amostras rapidamente e gerenciar onde cada microtubo está armazenado.
 
 ---
@@ -108,7 +108,7 @@ Sala  →  Freezer  →  Gaveta  →  Caixa (grade N×M)  →  Posição (A1, B3
 | Caixas | `/api/caixas` | CRUD + mapa visual da grade |
 | Amostras | `/api/amostras` | CRUD + busca + sugestão first-fit + importação CSV |
 
-> 📄 **Documentação completa do backend:** [`backend/Backend-Documentation.md`](./backend/Backend-Documentation.md)  
+> 📄 **Documentação completa do backend:** [`backend/Backend-Documentation.md`](./backend/Backend-Documentation.md)
 > Contém: todos os endpoints, payloads, variáveis de ambiente, dependências, arquitetura detalhada e fluxo de dados.
 
 ---

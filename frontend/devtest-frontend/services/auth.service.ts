@@ -2,7 +2,7 @@ import { post, get } from './api';
 import { AuthResponse, Usuario } from '@/types';
 
 export const authService = {
-  
+
   async login(email: string, senha: string): Promise<AuthResponse> {
     const res = await post<AuthResponse>('/auth/login', { email, senha });
     if (typeof window !== 'undefined') {
@@ -23,7 +23,7 @@ export const authService = {
   logout(): void {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('neo_token');
-      localStorage.removeItem('neo_usuario');
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
       window.location.href = '/login';
     }
   },

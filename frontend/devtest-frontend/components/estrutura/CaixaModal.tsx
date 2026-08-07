@@ -79,8 +79,9 @@ export default function CaixaModal({
       }
       onSuccess();
       onClose();
-    } catch (err: any) {
-      setError(err?.message || 'Erro ao salvar caixa.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao salvar caixa.';
+      setError(msg);
     } finally {
       setLoading(false);
     }

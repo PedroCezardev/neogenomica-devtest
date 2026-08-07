@@ -21,29 +21,28 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [usuario, setUsuario] = useState<UsuarioState | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Inicializa o estado lazily para evitar setState síncrono no useEffect
+  const [token, setToken] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('neo_token');
+  });
+
+  const [usuario, setUsuario] = useState<UsuarioState | null>(() => {
+    if (typeof window === 'undefined') return null;
+    return authService.getStoredUser();
+  });
+
+  const [loading] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    // Carrega do localStorage ao iniciar
-    const storedToken = localStorage.getItem('neo_token');
-    const storedUser = authService.getStoredUser();
-
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUsuario(storedUser);
-    } else {
-      // Se não estiver na página de login, redireciona
-      if (pathname !== '/login') {
-        router.push('/login');
-      }
+    // Redireciona para o login se não houver token ativo e não estiver no /login
+    if (!token && pathname !== '/login') {
+      router.push('/login');
     }
-    setLoading(false);
-  }, [pathname, router]);
+  }, [token, pathname, router]);
 
   function setAuth(newToken: string, newUsuario: UsuarioState) {
     setToken(newToken);

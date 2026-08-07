@@ -36,8 +36,9 @@ export default function MapaCaixaPage({
     try {
       const data = await caixaService.getMapa(caixaId);
       setMapaData(data);
-    } catch (err: any) {
-      setError(err?.message || 'Erro ao carregar o mapa da caixa.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao carregar o mapa da caixa.';
+      setError(msg);
     } finally {
       setLoading(false);
     }

@@ -71,8 +71,9 @@ export default function ImportCSVModal({
       const res = await amostraService.importarCSV(selectedFile);
       setResult(res);
       onSuccess();
-    } catch (err: any) {
-      setError(err?.message || 'Erro ao importar arquivo CSV.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao importar arquivo CSV.';
+      setError(msg);
     } finally {
       setLoading(false);
     }

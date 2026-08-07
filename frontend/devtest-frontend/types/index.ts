@@ -46,7 +46,7 @@ export interface Caixa {
   _count?: { amostras: number };
 }
 
-// Amostra 
+// Amostra
 
 export interface Amostra {
   id: number;

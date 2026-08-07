@@ -113,12 +113,9 @@ export default function NovaAmostraPage() {
       });
 
       router.push('/amostras');
-    } catch (err: any) {
-      if (err instanceof ApiError) {
-        setError(err.message);
-      } else {
-        setError(err?.message || 'Erro ao cadastrar amostra.');
-      }
+    } catch (err: unknown) {
+      const msg = err instanceof ApiError ? err.message : (err instanceof Error ? err.message : 'Erro ao cadastrar amostra.');
+      setError(msg);
     } finally {
       setSubmitting(false);
     }
