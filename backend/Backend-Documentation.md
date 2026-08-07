@@ -88,9 +88,9 @@ JWT_EXPIRES_IN="7d"  # Duração do token: 7d, 24h, 60m, etc.
 NODE_ENV="development"
 ```
 
-> **Por que dois URLs do Supabase?**  
-> O Supabase usa PgBouncer (pooler) para conexões de aplicação — não suporta certas operações do Prisma Migrate.  
-> Para migrações, é necessário usar a porta `5432` (conexão direta).  
+> **Por que dois URLs do Supabase?**
+> O Supabase usa PgBouncer (pooler) para conexões de aplicação — não suporta certas operações do Prisma Migrate.
+> Para migrações, é necessário usar a porta `5432` (conexão direta).
 > Para o runtime da app, usamos a porta `6543` (pooler) que aguenta mais conexões simultâneas.
 
 ---
@@ -224,17 +224,17 @@ backend/
 
 ### Detalhes importantes do Schema
 
-**`Amostra.posicao`** é uma `String`, não uma entidade separada.  
-Por que? Posições são calculadas dinamicamente pelo tamanho da caixa (`linhas × colunas`).  
+**`Amostra.posicao`** é uma `String`, não uma entidade separada.
+Por que? Posições são calculadas dinamicamente pelo tamanho da caixa (`linhas × colunas`).
 Uma caixa 10×10 tem posições `A1` a `J10`. Criar uma tabela com 100 rows seria desnecessário.
 
-**`Amostra.codigoAmostra`** é `String?` (opcional).  
+**`Amostra.codigoAmostra`** é `String?` (opcional).
 O CSV real da NeoGenomica tem linhas sem código (ex: controles sem tubo físico).
 
-**`Freezer.maxGavetas`** e **`Gaveta.maxCaixas`** são `Int?` (opcional).  
+**`Freezer.maxGavetas`** e **`Gaveta.maxCaixas`** são `Int?` (opcional).
 `null` significa sem limite definido — o sistema não bloqueia a adição.
 
-**Deleção em cascata (onDelete: Cascade)**  
+**Deleção em cascata (onDelete: Cascade)**
 Deletar uma `Sala` remove automaticamente seus `Freezers → Gavetas → Caixas → Amostras`.
 
 ---
@@ -319,7 +319,7 @@ errorHandler.ts → é instanceof AppError?
 
 ## 8. Tratamento de Erros
 
-O arquivo `errorHandler.ts` é registrado **após todas as rotas** no `index.ts`.  
+O arquivo `errorHandler.ts` é registrado **após todas as rotas** no `index.ts`.
 Ele centraliza 4 tipos de erro:
 
 | Tipo | Quando ocorre | HTTP retornado |
@@ -369,7 +369,7 @@ router.get('/me', authMiddleware, authController.getProfile);       // protegida
 router.get('/usuarios', authMiddleware, authController.findAll);    // protegida ← token obrigatório
 ```
 
-> Para o desafio, as demais rotas (CRUD, amostras) são públicas para facilitar testes.  
+> Para o desafio, as demais rotas (CRUD, amostras) são públicas para facilitar testes.
 > Em produção, todas as rotas de escrita (POST, PUT, DELETE) deveriam exigir autenticação.
 
 ---
@@ -573,7 +573,7 @@ O script `prisma/seed.ts` popula o banco com os dados reais da NeoGenomica a par
 npm run seed
 ```
 
-Internamente, usa a mesma lógica de find-or-create do `importacaoService`.  
+Internamente, usa a mesma lógica de find-or-create do `importacaoService`.
 Exibe logs no console informando cada entidade criada e o relatório final.
 
 ### Configuração no `package.json`

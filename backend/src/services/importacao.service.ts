@@ -25,7 +25,7 @@ interface CsvRow {
  */
 
 export const importacaoService = {
-  
+
   async importarCSV(buffer: Buffer) {
     const content = buffer.toString('utf-8');
 

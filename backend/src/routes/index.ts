@@ -16,4 +16,3 @@ router.use('/caixas', caixaRoutes);
 router.use('/amostras', amostraRoutes);
 
 export default router;
-

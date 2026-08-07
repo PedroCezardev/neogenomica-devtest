@@ -13,4 +13,3 @@ router.put('/:id', caixaController.update);
 router.delete('/:id', caixaController.delete);
 
 export default router;
-

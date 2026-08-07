@@ -2,7 +2,7 @@ import prisma from '../lib/prisma';
 import { CreateAmostraDto, UpdateAmostraDto } from '../dtos/amostra.dto';
 
 export const amostraRepository = {
-  
+
   findAll(filtros?: {
     busca?: string;
     codigoAmostra?: string;

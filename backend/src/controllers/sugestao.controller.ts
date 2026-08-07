@@ -11,5 +11,5 @@ export const sugestaoController = {
       next(err);
     }
   },
-  
+
 };

@@ -21,4 +21,3 @@ router.put('/:id', amostraController.update);
 router.delete('/:id', amostraController.delete);
 
 export default router;
-
