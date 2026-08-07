@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 
-// ─── Ícones SVG inline (sem dependência) ─────────────────────────────────
+// Ícones SVG inline (sem dependência)
 const DashboardIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
     <rect x="1" y="1" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
@@ -46,7 +46,7 @@ const MapIcon = () => (
   </svg>
 );
 
-// ─── Configuração dos itens de navegação ─────────────────────────────────
+// Configuração dos itens de navegação
 const navItems = [
   {
     label: 'Dashboard',
@@ -76,7 +76,7 @@ const navItems = [
 
 import { useAuth } from '@/contexts/AuthContext';
 
-// ─── Componente principal ─────────────────────────────────────────────────
+// Componente principal
 export default function Sidebar() {
   const pathname = usePathname();
   const { logout } = useAuth();
@@ -88,9 +88,8 @@ export default function Sidebar() {
 
 
   return (
-    <aside className="w-60 h-screen bg-sidebar fixed left-0 top-0 flex flex-col z-30">
+    <aside className="hidden md:flex w-60 h-screen bg-sidebar fixed left-0 top-0 flex-col z-30">
 
-      {/* ── Logo ── */}
       <div className="px-5 py-5 border-b border-white/10">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="relative w-50 h-10">
@@ -108,7 +107,6 @@ export default function Sidebar() {
         </p>
       </div>
 
-      {/* ── Navegação ── */}
       <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto">
         <p className="text-white/25 text-[10px] font-semibold tracking-widest uppercase px-3 mb-2">
           Menu
@@ -144,7 +142,7 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* ── Rodapé ── */}
+      {/* Rodapé */}
       <div className="px-3 py-4 border-t border-white/10">
         {/* Card decorativo do sistema */}
         <div className="bg-neo-dark/60 rounded-xl p-4 mb-3 border border-white/8">
