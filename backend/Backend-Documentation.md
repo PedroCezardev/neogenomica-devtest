@@ -20,6 +20,7 @@
 11. [Algoritmo First-Fit](#11-algoritmo-first-fit)
 12. [Importação CSV](#12-importação-csv)
 13. [Seed do Banco](#13-seed-do-banco)
+14. [Suíte de Testes Unitários e CI/CD](#14-suíte-de-testes-unitários-e-cicd)
 
 ---
 
@@ -591,4 +592,30 @@ Exibe logs no console informando cada entidade criada e o relatório final.
 
 ---
 
-*Documentação gerada em: 2026-08-05 — Backend v1.0.0*
+## 14. Suíte de Testes Unitários e CI/CD
+
+A qualidade do código, a segurança da autenticação e as regras de negócio da API são garantidas por uma suíte de testes unitários construída com **Vitest** em ambiente Node.js.
+
+### Mapeamento dos Cenários de Teste (`src/__tests__/`)
+
+| Arquivo | Módulo / Alvo | O que testa |
+|---|---|---|
+| `src/__tests__/posicao.spec.ts` | `utils/posicao.ts` | Geração de posições $N \times M$ (`A1` a `J10`) e validação de limites de caixa. |
+| `src/__tests__/sugestao.service.spec.ts` | `sugestao.service.ts` | Algoritmo First-Fit: alocação determinística na 1ª vaga livre e sugestões de expansão quando cheia. |
+| `src/__tests__/auth.service.spec.ts` | `auth.service.ts` | Login de usuário, registro com hash de senha `bcryptjs` e validação de credenciais inválidas. |
+| `src/__tests__/amostra.service.spec.ts` | `amostra.service.ts` | Criação de amostras, bloqueio de posições duplicadas na mesma caixa e filtros de busca. |
+| `src/__tests__/auth.middleware.spec.ts` | `auth.middleware.ts` | Validação de token JWT, injeção de `req.usuarioId` e bloqueio com status HTTP 401. |
+
+### Como Executar os Testes no Backend
+
+```bash
+# Executar todos os testes do backend uma única vez
+npm test
+
+# Executar os testes em modo watch (desenvolvimento)
+npm run test:watch
+```
+
+---
+
+*Documentação gerada em: 2026-08-07 — Backend v1.1.0*

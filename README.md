@@ -1,18 +1,28 @@
 # 🧬 NeoGenomica — Sistema de Gerenciamento de Microtubos de DNA
 
-Sistema **Full Stack** desenvolvido como solução ao desafio técnico NeoGenomica 2026.
-Substitui o controle de estoque em planilha por uma aplicação web moderna, permitindo localizar amostras rapidamente e gerenciar onde cada microtubo está armazenado.
+Sistema **Full Stack** desenvolvido para o desafio técnico NeoGenomica 2026.
+Substitui planilhas manuais por uma aplicação web profissional, permitindo cadastrar, buscar e visualizar a localização exata de microtubos de DNA em tempo real.
+
+---
+
+## 📚 Documentações Detalhadas
+
+| Módulo | Documentação | O que engloba |
+|---|---|---|
+| 🖥️ **Frontend** | [`frontend/Frontend-Documentation.md`](./frontend/Frontend-Documentation.md) | Next.js 16, React 19, Design System, componentes, estado global, navegação mobile e testes |
+| ⚙️ **Backend** | [`backend/Backend-Documentation.md`](./backend/Backend-Documentation.md) | API Express, Prisma ORM, PostgreSQL (Supabase), Zod, autenticação JWT, algoritmo First-Fit e testes |
 
 ---
 
 ## ⚡ Quick Start
 
 ### Pré-requisitos
+- **Node.js** v18+ instalado
+- Instância do **PostgreSQL** (ou conta no [Supabase](https://supabase.com))
 
-- **Node.js** v18+
-- Conta no **[Supabase](https://supabase.com)** (banco PostgreSQL gerenciado)
+---
 
-### Subindo o Backend
+### 1. Subindo o Backend (API REST)
 
 ```bash
 # 1. Entrar na pasta do backend
@@ -21,28 +31,64 @@ cd backend
 # 2. Instalar dependências
 npm install
 
-# 3. Configurar variáveis de ambiente
+# 3. Configurar variáveis de ambiente (.env)
 cp .env.example .env
-# → edite o .env com suas credenciais do Supabase
+# → edite o .env com suas credenciais do PostgreSQL/Supabase
 
-# 4. Rodar as migrações do banco
+# 4. Rodar as migrações do banco de dados
 npx prisma migrate dev
 
-# 5. Popular o banco com dados de exemplo (opcional)
+# 5. Popular o banco com dados reais de exemplo (opcional)
 npm run seed
 
-# 6. Iniciar o servidor em desenvolvimento
+# 6. Iniciar o servidor em modo desenvolvimento
 npm run dev
-# → API disponível em http://localhost:3001
+# → API rodando em http://localhost:3001
 ```
 
-### Subindo o Frontend
+---
+
+### 2. Subindo o Frontend (Next.js)
 
 ```bash
-# Em breve — frontend em desenvolvimento
-cd frontend
+# 1. Entrar na pasta do frontend
+cd frontend/devtest-frontend
+
+# 2. Instalar dependências
 npm install
+
+# 3. Iniciar o servidor em modo desenvolvimento
 npm run dev
+# → Aplicação rodando em http://localhost:3000
+```
+
+---
+
+## 🧪 Suíte de Testes Unitários & Qualidade (CI/CD)
+
+O projeto conta com **41 testes unitários** automatizados (20 no Backend e 21 no Frontend) e validação estática de código com ESLint.
+
+### Executando os Testes do Backend
+```bash
+cd backend
+npm test
+```
+
+### Executando os Testes do Frontend
+```bash
+cd frontend/devtest-frontend
+npm test
+```
+
+### Executando o Git Pre-Commit Hook (Qualidade Automática)
+O projeto utiliza a ferramenta `pre-commit` para rodar todos os testes e linters automaticamente antes de cada commit no Git:
+
+```bash
+# Instalar a ferramenta de hooks (se ainda não tiver)
+pip install pre-commit
+
+# Executar a verificação em todos os arquivos manualmente
+pre-commit run --all-files
 ```
 
 ---
@@ -51,98 +97,71 @@ npm run dev
 
 | Camada | Tecnologia |
 |---|---|
-| **Frontend** | Next.js 14 (App Router) + TypeScript |
-| **Backend** | Node.js + Express + TypeScript |
-| **Banco de Dados** | PostgreSQL via Supabase |
-| **ORM** | Prisma 6 |
-| **Autenticação** | JWT + bcrypt |
-| **Validação** | Zod |
+| **Frontend Core** | Next.js 16 (App Router) + React 19 + TypeScript |
+| **Estilização UI** | Vanilla CSS + Tailwind CSS 4 Design Tokens + Montserrat Font |
+| **Testes Frontend** | Vitest 4 + React Testing Library + jsdom |
+| **Backend Core** | Node.js + Express 5 + TypeScript |
+| **Banco de Dados** | PostgreSQL (Supabase) + Prisma ORM 6 |
+| **Testes Backend** | Vitest 4 (Node environment) |
+| **Autenticação** | JWT (JSON Web Tokens) + bcryptjs |
+| **Validação** | Zod Schemas |
+| **Garantia de Qualidade** | Git Pre-commit Hooks + ESLint 9 |
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📁 Estrutura do Repositório
 
 ```
 neogenomica-devtest/
-├── backend/                  # API REST Express + TypeScript
+├── backend/                      # API REST Express + TypeScript
 │   ├── src/
-│   │   ├── controllers/      # Camada HTTP (entrada/saída)
-│   │   ├── services/         # Regras de negócio
-│   │   ├── repositories/     # Acesso ao banco (Prisma)
-│   │   ├── dtos/             # Schemas de validação (Zod)
-│   │   ├── middlewares/      # Auth JWT, Error Handler
-│   │   ├── routes/           # Definição de rotas
-│   │   ├── utils/            # Utilitários compartilhados
-│   │   └── lib/              # Singleton do Prisma Client
-│   └── prisma/
-│       ├── schema.prisma     # Modelo de dados
-│       ├── migrations/       # Histórico de migrações SQL
-│       └── seed.ts           # Script para popular o banco
+│   │   ├── controllers/          # Camada HTTP req/res
+│   │   ├── services/             # Regras de negócio e First-Fit
+│   │   ├── repositories/         # Acesso ao banco de dados (Prisma)
+│   │   ├── dtos/                 # Schemas Zod de validação
+│   │   ├── middlewares/          # Autenticação JWT e Tratamento Global de Erros
+│   │   ├── routes/               # Rotas HTTP
+│   │   └── __tests__/            # 20 Testes Unitários (Vitest)
+│   ├── prisma/                   # Schema Prisma, Migrações e Seed
+│   └── Backend-Documentation.md  # Especificação técnica do Backend
 │
-├── frontend/                 # (em desenvolvimento)
-├── README.md                 # Este arquivo
-├── README-desafio.md         # Enunciado original do desafio
-└── amostras_exemplo.csv      # Dados reais de exemplo para seed/import
+├── frontend/                     # Aplicação Web Next.js 16 + React 19
+│   ├── devtest-frontend/
+│   │   ├── app/                  # Rotas (Dashboard, Estrutura, Amostras, Mapa, Login)
+│   │   ├── components/           # UI, Modais, BoxGrid, MobileNav
+│   │   ├── services/             # Chamadas HTTP (api.ts, auth, amostras...)
+│   │   ├── contexts/             # Contexto de Autenticação
+│   │   └── __tests__/            # 21 Testes Unitários (Vitest + RTL)
+│   └── Frontend-Documentation.md # Especificação técnica do Frontend
+│
+├── .pre-commit-config.yaml       # Configuração dos Hooks Git de Pre-Commit
+├── README.md                     # Visão Geral do Projeto
+└── amostras_exemplo.csv          # Dados de exemplo do laboratório
 ```
 
 ---
 
-## 🧊 Hierarquia de Armazenamento
+## 🧊 Hierarquia Física do Laboratório
 
-O sistema segue a hierarquia física real do laboratório:
+O sistema respeita rigorosamente a estrutura física do laboratório:
 
 ```
-Sala  →  Freezer  →  Gaveta  →  Caixa (grade N×M)  →  Posição (A1, B3...)  →  Amostra
+Sala  →  Freezer  →  Gaveta  →  Caixa (grade N×M)  →  Posição (A1, B3...)  →  Amostra (Microtubo)
 ```
 
 ---
 
-## 🔌 API — Visão Geral das Rotas
+## ✨ Funcionalidades Principais
 
-| Módulo | Prefixo | Descrição |
-|---|---|---|
-| Auth | `/api/auth` | Registro, login, perfil |
-| Salas | `/api/salas` | CRUD de salas |
-| Freezers | `/api/freezers` | CRUD de freezers |
-| Gavetas | `/api/gavetas` | CRUD de gavetas |
-| Caixas | `/api/caixas` | CRUD + mapa visual da grade |
-| Amostras | `/api/amostras` | CRUD + busca + sugestão first-fit + importação CSV |
-
-> 📄 **Documentação completa do backend:** [`backend/Backend-Documentation.md`](./backend/Backend-Documentation.md)
-> Contém: todos os endpoints, payloads, variáveis de ambiente, dependências, arquitetura detalhada e fluxo de dados.
-
----
-
-## ✅ Funcionalidades Implementadas
-
-### Requisitos Obrigatórios
-- [x] CRUD completo de Salas, Freezers, Gavetas e Caixas
-- [x] Cadastro de amostras com validação de posição
-- [x] **Sugestão automática de posição** (algoritmo First-Fit)
-- [x] Busca e listagem de amostras com localização completa
-
-### Bônus
-- [x] Limites de capacidade (max gavetas/freezer, max caixas/gaveta)
-- [x] Mapa visual da grade da caixa (`GET /api/caixas/:id/mapa`)
-- [x] Importação via CSV (`POST /api/amostras/importar`)
-- [x] Autenticação JWT
-- [x] Busca/filtro avançado por material, exame, código, nome
-
----
-
-## 🌱 Seed de Dados
-
-Para popular o banco com os dados reais do laboratório (arquivo `amostras_exemplo.csv`):
-
-```bash
-cd backend
-npm run seed
-```
-
-O seed é **idempotente** — pode ser executado múltiplas vezes sem duplicar dados.
+- **🎯 Sugestão Inteligente (First-Fit)**: Encontra automaticamente a primeira posição livre no estoque laboratorial seguindo a ordem de cadastro.
+- **🗺️ Mapa Visual Interativo**: Renderiza uma grade $N \times M$ com status de ocupação, cores por material e tooltips informativos.
+- **📥 Importação em Lote via CSV**: Drag-and-drop de arquivos `.csv` com processamento idempotente sem duplicar estruturas.
+- **📱 Responsividade Híbrida**: Sidebar fixo no Desktop e **Mobile Bottom Navigation Bar** estilo aplicativo em celulares.
+- **🛡️ Qualidade & Segurança**: Autenticação JWT e suite de **41 testes unitários** protegendo a aplicação contra regressões.
 
 ---
 
 ## 👤 Autor
 
-**Pedro Cezar** — Processo Seletivo NeoGenomica 2026
+**Pedro Cezar** — Desenvolvedor Fullstack
+*Processo Seletivo NeoGenomica 2026*
