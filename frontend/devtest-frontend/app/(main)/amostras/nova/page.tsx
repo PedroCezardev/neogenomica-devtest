@@ -185,7 +185,7 @@ export default function NovaAmostraPage() {
                     : 'text-text-muted hover:text-text-primary'
                 }`}
               >
-                🤖 Sugestão Automática (First-Fit)
+                Sugestão Automática (First-Fit)
               </button>
 
               <button
@@ -197,7 +197,7 @@ export default function NovaAmostraPage() {
                     : 'text-text-muted hover:text-text-primary'
                 }`}
               >
-                🖐️ Seleção Manual
+                Seleção Manual
               </button>
             </div>
           </div>

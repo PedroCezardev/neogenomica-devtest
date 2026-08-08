@@ -4,12 +4,14 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/auth.service';
+import { useAuth } from '@/contexts/AuthContext';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { ApiError } from '@/services/api';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { setAuth } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
 
   // Form states
@@ -41,7 +43,8 @@ export default function LoginPage() {
         setIsRegister(false);
         setSenha('');
       } else {
-        await authService.login(email, senha);
+        const res = await authService.login(email, senha);
+        setAuth(res.token, res.usuario);
         router.push('/');
       }
     } catch (err) {

@@ -150,7 +150,7 @@ export default function DashboardPage() {
           <span className="text-xs font-bold text-accent uppercase tracking-wider px-1 py-1 rounded-full inline-block mb-3">
             Visão Geral do Laboratório
           </span>
-          <h2 className="text-2xl md:text-3xl font-extrabold text-text-primary tracking-tight">
+          <h2 suppressHydrationWarning className="text-2xl md:text-3xl font-extrabold text-text-primary tracking-tight">
             Bem-vindo de volta, {usuario?.nome ?? 'Pesquisador'}!
           </h2>
           <p className="text-xs md:text-sm text-text-muted mt-1.5 max-w-xl leading-relaxed">

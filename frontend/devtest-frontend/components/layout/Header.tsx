@@ -106,13 +106,13 @@ export default function Header() {
       {/* ── Usuário ── */}
       <div className="flex items-center gap-2.5 cursor-pointer group">
         {/* Avatar com inicial */}
-        <div className="w-8 h-8 rounded-full bg-neo-dark flex items-center justify-center text-xs font-bold text-neo-light border-2 border-accent/30">
+        <div suppressHydrationWarning className="w-8 h-8 rounded-full bg-neo-dark flex items-center justify-center text-xs font-bold text-neo-light border-2 border-accent/30">
           {initials}
         </div>
 
         {/* Nome + email */}
         <div className="hidden md:block">
-          <p className="text-sm font-semibold text-text-primary leading-tight">
+          <p suppressHydrationWarning className="text-sm font-semibold text-text-primary leading-tight">
             {usuario?.nome ?? 'Usuário'}
           </p>
         </div>
