@@ -5,12 +5,32 @@ Substitui planilhas manuais por uma aplicação web profissional, permitindo cad
 
 ---
 
-## 📚 Documentações Detalhadas
+## 📚 Central de Documentações (`/docs`)
 
-| Módulo | Documentação | O que engloba |
+| Módulo / Documento | Link de Acesso | Conteúdo |
 |---|---|---|
-| 🖥️ **Frontend** | [`frontend/Frontend-Documentation.md`](./frontend/Frontend-Documentation.md) | Next.js 16, React 19, Design System, componentes, estado global, navegação mobile e testes |
-| ⚙️ **Backend** | [`backend/Backend-Documentation.md`](./backend/Backend-Documentation.md) | API Express, Prisma ORM, PostgreSQL (Supabase), Zod, autenticação JWT, algoritmo First-Fit e testes |
+| 🖥️ **Frontend** | [`docs/Frontend-Documentation.md`](./docs/Frontend-Documentation.md) | Next.js 16, React 19, Design System, componentes, estado global, navegação mobile e testes |
+| ⚙️ **Backend** | [`docs/Backend-Documentation.md`](./docs/Backend-Documentation.md) | API Express, Prisma ORM, PostgreSQL (Supabase), Zod, autenticação JWT, algoritmo First-Fit e testes |
+| 🔄 **Fluxo de Dev (Desafio 2)** | [`docs/Fluxo-de-Desenvolvimento.md`](./docs/Fluxo-de-Desenvolvimento.md) | Git Flow (GitLab Flow), SemVer, esteira de releases, homologação, hotfix e rollback |
+| 📋 **Enunciado do Desafio** | [`docs/README-desafio.md`](./docs/README-desafio.md) | Requisitos e especificações originais do desafio técnico |
+
+---
+
+## 🔄 Fluxo de Desenvolvimento & Git Flow (Desafio 2)
+
+O projeto adota uma variação simplificada e eficiente do **GitLab Flow**, combinada com o padrão de versionamento semântico **[SemVer](https://semver.org/)** (`MAJOR.MINOR.PATCH`):
+
+```
+feature/1 ──(PR)──> main ──(Tag SemVer)──> Homologação ──(Aprovação)──> Produção
+```
+
+- **Branching Strategy**: O código instável de novas funcionalidades é desenvolvido em branches de feature (`feat/*` ou `fix/*`) e integrado à branch principal `main` exclusivamente através de **Pull Requests** com revisão por pares.
+- **Validação Automática (CI/CD Local)**: Antes de cada commit, os ganchos do `pre-commit` executam a suíte de 41 testes unitários (Vitest) e a checagem estática (ESLint).
+- **Homologação & Tagging**: Cada release gera um incremento de versão nos arquivos `.version` e `CHANGELOG.md` e dispara uma **Tag Git** (ex: `v1.1.0`), enviando o build para o ambiente de **Homologação**.
+- **Hotfix & Rollback**: *Hotfixes* seguem o fluxo contínuo a partir da `main` com tag PATCH (ex: `v1.1.1`). *Rollbacks* em produção são executados re-disparando o deploy a partir de uma tag estável anterior.
+
+> 📖 **Para conferir a especificação completa do fluxo com diagrama visual:**
+> Acesse a documentação dedicada em [`docs/Fluxo-de-Desenvolvimento.md`](./docs/Fluxo-de-Desenvolvimento.md).
 
 ---
 
@@ -113,6 +133,14 @@ pre-commit run --all-files
 
 ```
 neogenomica-devtest/
+├── docs/                         # Central de Documentações do Projeto
+│   ├── Backend-Documentation.md  # Especificação técnica do Backend
+│   ├── Frontend-Documentation.md # Especificação técnica do Frontend
+│   ├── Fluxo-de-Desenvolvimento.md # Git Flow, SemVer, CI/CD, Hotfix, Rollback
+│   ├── README-desafio.md         # Requisitos originais do Desafio 1 e 2
+│   ├── Frontend-Plan.md          # Plano de arquitetura do Frontend
+│   └── Neogenomica.excalidraw    # Diagrama de fluxo editável
+│
 ├── backend/                      # API REST Express + TypeScript
 │   ├── src/
 │   │   ├── controllers/          # Camada HTTP req/res
@@ -122,17 +150,15 @@ neogenomica-devtest/
 │   │   ├── middlewares/          # Autenticação JWT e Tratamento Global de Erros
 │   │   ├── routes/               # Rotas HTTP
 │   │   └── __tests__/            # 20 Testes Unitários (Vitest)
-│   ├── prisma/                   # Schema Prisma, Migrações e Seed
-│   └── Backend-Documentation.md  # Especificação técnica do Backend
+│   └── prisma/                   # Schema Prisma, Migrações e Seed
 │
 ├── frontend/                     # Aplicação Web Next.js 16 + React 19
-│   ├── devtest-frontend/
-│   │   ├── app/                  # Rotas (Dashboard, Estrutura, Amostras, Mapa, Login)
-│   │   ├── components/           # UI, Modais, BoxGrid, MobileNav
-│   │   ├── services/             # Chamadas HTTP (api.ts, auth, amostras...)
-│   │   ├── contexts/             # Contexto de Autenticação
-│   │   └── __tests__/            # 21 Testes Unitários (Vitest + RTL)
-│   └── Frontend-Documentation.md # Especificação técnica do Frontend
+│   └── devtest-frontend/
+│       ├── app/                  # Rotas (Dashboard, Estrutura, Amostras, Mapa, Login)
+│       ├── components/           # UI, Modais, BoxGrid, Sidebar Collapsible, MobileNav
+│       ├── services/             # Chamadas HTTP (api.ts, auth, amostras...)
+│       ├── contexts/             # Contexto de Autenticação
+│       └── __tests__/            # 21 Testes Unitários (Vitest + RTL)
 │
 ├── .pre-commit-config.yaml       # Configuração dos Hooks Git de Pre-Commit
 ├── README.md                     # Visão Geral do Projeto
@@ -156,7 +182,7 @@ Sala  →  Freezer  →  Gaveta  →  Caixa (grade N×M)  →  Posição (A1, B3
 - **🎯 Sugestão Inteligente (First-Fit)**: Encontra automaticamente a primeira posição livre no estoque laboratorial seguindo a ordem de cadastro.
 - **🗺️ Mapa Visual Interativo**: Renderiza uma grade $N \times M$ com status de ocupação, cores por material e tooltips informativos.
 - **📥 Importação em Lote via CSV**: Drag-and-drop de arquivos `.csv` com processamento idempotente sem duplicar estruturas.
-- **📱 Responsividade Híbrida**: Sidebar fixo no Desktop e **Mobile Bottom Navigation Bar** estilo aplicativo em celulares.
+- **📱 Responsividade Híbrida**: Sidebar fixo/comprimível no Desktop e **Mobile Bottom Navigation Bar** estilo aplicativo em celulares.
 - **🛡️ Qualidade & Segurança**: Autenticação JWT e suite de **41 testes unitários** protegendo a aplicação contra regressões.
 
 ---

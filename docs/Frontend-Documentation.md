@@ -39,7 +39,7 @@
 
 ## 2. Design System e Estilização
 
-O design system da aplicação foi construído em Vanilla CSS + Tailwind v4 tokens no arquivo [`app/globals.css`](file:///c:/Users/wk/Work-Projects/Projects-Fullstack/Teste-Neogenomica/neogenomica-devtest/frontend/devtest-frontend/app/globals.css), garantindo uma identidade visual limpa, corporativa e profissional.
+O design system da aplicação foi construído em Vanilla CSS + Tailwind v4 tokens no arquivo `app/globals.css`, garantindo uma identidade visual limpa, corporativa e profissional.
 
 ### Paleta de Cores Oficial
 
@@ -77,7 +77,7 @@ frontend/devtest-frontend/
 │
 ├── components/               # Componentes React Reutilizáveis
 │   ├── ui/                   # Design System básico (Button, Input, Select, Modal, Badge, StatCard...)
-│   ├── layout/               # AppShell, Sidebar, Header, MobileNav
+│   ├── layout/               # AppShell, Sidebar (Collapsible), Header, MobileNav
 │   ├── estrutura/            # Modais de CRUD da hierarquia física
 │   ├── amostras/             # Filtros, Modal de Edição e ImportCSVModal
 │   ├── nova-amostra/         # SugestaoCard (Card visual do First-Fit)
@@ -123,16 +123,16 @@ A camada de serviços centraliza todas as chamadas HTTP para o backend Express.
 | `freezer.service.ts` | `getAll`, `getById`, `create`, `update`, `delete` | CRUD de Freezers |
 | `gaveta.service.ts` | `getAll`, `getById`, `create`, `update`, `delete` | CRUD de Gavetas de Armazenamento |
 | `caixa.service.ts` | `getAll`, `getById`, `getMapa`, `create`, `update`, `delete` | CRUD de Caixas e consulta da grade do mapa |
-| `amostra.service.ts` | `getAll`, `getById`, `sugerirPosicao`, `importarCSV`, `create`, `update`, `delete` | Operações com microtubos eFirst-Fit |
+| `amostra.service.ts` | `getAll`, `getById`, `sugerirPosicao`, `importarCSV`, `create`, `update`, `delete` | Operações com microtubos e First-Fit |
 
 ---
 
 ## 5. Autenticação e Estado Global (`AuthContext`)
 
-O [`AuthContext.tsx`](file:///c:/Users/wk/Work-Projects/Projects-Fullstack/Teste-Neogenomica/neogenomica-devtest/frontend/devtest-frontend/contexts/AuthContext.tsx) gerencia o estado da sessão do usuário em toda a aplicação.
+O `AuthContext.tsx` gerencia o estado da sessão do usuário em toda a aplicação.
 
 ### Funcionamento Interno
-1. **Inicialização Preguiçosa (Lazy Initialization)**: Carrega o token JWT (`neo_token`) e o perfil do usuário (`neo_usuario`) diretamente do `localStorage` no momento da montagem do estado (`useState(() => ...)`), evitando renderizações desnecessárias.
+1. **Inicialização Preguiçosa & Sincronização Automática**: Carrega o token e busca o perfil atualizado via `/auth/me`, atualizando o estado do React e o `localStorage`.
 2. **Proteção Automática de Rotas**: O `useEffect` monitora a rota atual (`usePathname()`). Se o usuário não possuir token e tentar acessar qualquer página protegida, é redirecionado para `/login`.
 3. **Persistência**: Ao realizar login ou registro, `setAuth()` atualiza a memória React e o `localStorage` simultaneamente.
 
@@ -176,8 +176,8 @@ O [`AuthContext.tsx`](file:///c:/Users/wk/Work-Projects/Projects-Fullstack/Teste
 A aplicação adapta sua navegação de acordo com o dispositivo do usuário:
 
 - **Desktop (`md:` - telas largas)**:
-  - Sidebar lateral fixo na esquerda (`w-60`) com o logo oficial da NeoGenomica, menu de navegação e card de status do sistema.
-  - Header fixo no topo (`h-16 shrink-0`) com avatar, nome e barra de busca rápida.
+  - **Sidebar Comprimível**: Menu lateral com transição fluida CSS (`transition-all duration-300`). Possui botão flutuante para alternar entre o modo expandido (`w-60` com a logo completa) e comprimido (`w-[72px]` com o ícone `/favicon.svg` e tooltips nativos).
+  - **Header Sticky**: Fixo no topo (`h-16 shrink-0`) com avatar, nome do usuário logado e barra de busca rápida.
 - **Mobile (`md:hidden` - celulares e tablets pequenos)**:
   - O Sidebar lateral é automaticamente ocultado para dar espaço total ao conteúdo.
   - Entra em ação o **MobileNav (`components/layout/MobileNav.tsx`)**: uma barra de navegação inferior estilo *App Móvel* fixada no rodapé da tela com efeito de vidro fosco (`backdrop-blur-lg`), ícones touch e indicador de aba ativa.
@@ -209,10 +209,6 @@ npm test
 npm run test:watch
 ```
 
-### Configuração do Vitest (`vitest.config.ts`)
-- **Ambiente**: `jsdom` (simula a árvore DOM do navegador).
-- **Resolução de Módulos**: Configuração de `alias` `@/` para a raiz do projeto e deduplicação da instância do React (`dedupe: ['react', 'react-dom']`) garantindo compatibilidade total com o React 19.
-
 ---
 
-*Documentação gerada em: 2026-08-07 — Frontend v1.0.0*
+*Documentação gerada em: 2026-08-07 — Frontend v1.1.0*
