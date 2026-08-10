@@ -21,7 +21,7 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // Inicializa o estado lazily para evitar setState síncrono no useEffect
+  // Inicializa o estado lazily a partir do localStorage
   const [token, setToken] = useState<string | null>(() => {
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('neo_token');
@@ -38,9 +38,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Redireciona para o login se não houver token ativo e não estiver no /login
+    // Redireciona para o login se não houver token ativo e não estiver na página /login
     if (!token && pathname !== '/login') {
       router.push('/login');
+    } else if (token) {
+      // Sincroniza sempre o perfil do usuário autenticado a partir do endpoint /auth/me
+      authService
+        .getMe()
+        .then((u) => {
+          if (u && u.nome) {
+            const userData = { id: u.id, nome: u.nome, email: u.email };
+            setUsuario(userData);
+            localStorage.setItem('neo_usuario', JSON.stringify(userData));
+          }
+        })
+        .catch((err) => {
+          if (err?.status === 401 || err?.statusCode === 401) {
+            logout();
+          }
+        });
     }
   }, [token, pathname, router]);
 
