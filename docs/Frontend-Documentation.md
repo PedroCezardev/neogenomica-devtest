@@ -140,6 +140,11 @@ O `AuthContext.tsx` gerencia o estado da sessão do usuário em toda a aplicaç�
 
 ## 6. Estrutura das Páginas e Componentes
 
+### 🎨 Diagrama do Fluxo de Navegação (Sitemap de Planejamento)
+![Diagrama do Fluxo de Navegação do Frontend](./Fluxo-frontend-image.png)
+
+---
+
 ### 1. Dashboard (`/`)
 - **Banner de Boas-Vindas**: Mensagem personalizada para o usuário logado e botões de atalho.
 - **Cards de Métricas (StatCard)**: Total de amostras, salas, freezers/gavetas e card destacado em navy escuro com a **Taxa de Ocupação Laboratorial**.
@@ -211,4 +216,4 @@ npm run test:watch
 
 ---
 
-*Documentação gerada em: 2026-08-07 — Frontend v1.1.0*
+*Documentação gerada em: 2026-08-11 — Frontend v1.1.0*

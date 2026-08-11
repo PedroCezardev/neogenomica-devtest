@@ -16,6 +16,12 @@ feature/1 ──(PR)──> GitHub Actions CI ──(Merge)──> main ──(T
 
 ## 📊 Diagrama do Fluxo (Workflow)
 
+### 🎨 Diagrama de Planejamento Original
+![Diagrama de Planejamento do Fluxo de Desenvolvimento](./Fluxo-desenvolvimento-image.png)
+
+---
+
+### 🗺️ Fluxograma Interativo em Mermaid
 ```mermaid
 flowchart TD
     subgraph Desenvolvedor

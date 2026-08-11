@@ -11,6 +11,7 @@ Substitui planilhas manuais por uma aplicação web profissional, permitindo cad
 
 | Módulo / Documento | Link de Acesso | Conteúdo |
 |---|---|---|
+| 🏛️ **Arquitetura & Banco de Dados** | [`docs/Arquitetura-e-Banco-de-Dados.md`](./docs/Arquitetura-e-Banco-de-Dados.md) | Visão geral da arquitetura Fullstack, Diagrama ERD do banco, dicionário de dados e regras relacionais |
 | 🖥️ **Frontend** | [`docs/Frontend-Documentation.md`](./docs/Frontend-Documentation.md) | Next.js 16, React 19, Design System, componentes, estado global, navegação mobile e testes |
 | ⚙️ **Backend** | [`docs/Backend-Documentation.md`](./docs/Backend-Documentation.md) | API Express, Prisma ORM, PostgreSQL (Supabase), Zod, autenticação JWT, algoritmo First-Fit e testes |
 | 🔄 **Fluxo de Dev (Desafio 2)** | [`docs/Fluxo-de-Desenvolvimento.md`](./docs/Fluxo-de-Desenvolvimento.md) | Git Flow (GitLab Flow), SemVer, esteira de releases, homologação, hotfix e rollback |
@@ -35,7 +36,7 @@ feature/1 ──(PR)──> GitHub Actions CI ──(Merge)──> main ──(T
 - **Hotfix & Rollback**: *Hotfixes* seguem o fluxo contínuo a partir da `main` com tag PATCH (ex: `v1.1.1`). *Rollbacks* em produção são executados re-disparando o deploy a partir de uma tag estável anterior.
 
 > 📖 **Para conferir as especificações completas:**
-> Acesse [`docs/Fluxo-de-Desenvolvimento.md`](./docs/Fluxo-de-Desenvolvimento.md) para o processo de trabalho e [`docs/Pipeline-CI-CD.md`](./docs/Pipeline-CI-CD.md) para os detalhes do pipeline CI/CD no GitHub Actions.
+> Acesse [`docs/Arquitetura-e-Banco-de-Dados.md`](./docs/Arquitetura-e-Banco-de-Dados.md) para a visão geral da solução, [`docs/Fluxo-de-Desenvolvimento.md`](./docs/Fluxo-de-Desenvolvimento.md) para o processo de trabalho e [`docs/Pipeline-CI-CD.md`](./docs/Pipeline-CI-CD.md) para os detalhes da esteira de CI/CD.
 
 ---
 
@@ -139,6 +140,7 @@ pre-commit run --all-files
 ```
 neogenomica-devtest/
 ├── docs/                         # Central de Documentações do Projeto
+│   ├── Arquitetura-e-Banco-de-Dados.md # Visão Geral Fullstack, Diagrama ERD e Dicionário de Dados
 │   ├── Backend-Documentation.md  # Especificação técnica do Backend
 │   ├── Frontend-Documentation.md # Especificação técnica do Frontend
 │   ├── Fluxo-de-Desenvolvimento.md # Git Flow, SemVer, releases, hotfix, rollback
