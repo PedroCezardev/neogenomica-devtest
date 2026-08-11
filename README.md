@@ -1,5 +1,7 @@
 # 🧬 NeoGenomica — Sistema de Gerenciamento de Microtubos de DNA
 
+[![CI Pipeline](https://github.com/PedroCezardev/neogenomica-devtest/actions/workflows/ci.yaml/badge.svg)](https://github.com/PedroCezardev/neogenomica-devtest/actions/workflows/ci.yaml)
+
 Sistema **Full Stack** desenvolvido para o desafio técnico NeoGenomica 2026.
 Substitui planilhas manuais por uma aplicação web profissional, permitindo cadastrar, buscar e visualizar a localização exata de microtubos de DNA em tempo real.
 
@@ -12,6 +14,7 @@ Substitui planilhas manuais por uma aplicação web profissional, permitindo cad
 | 🖥️ **Frontend** | [`docs/Frontend-Documentation.md`](./docs/Frontend-Documentation.md) | Next.js 16, React 19, Design System, componentes, estado global, navegação mobile e testes |
 | ⚙️ **Backend** | [`docs/Backend-Documentation.md`](./docs/Backend-Documentation.md) | API Express, Prisma ORM, PostgreSQL (Supabase), Zod, autenticação JWT, algoritmo First-Fit e testes |
 | 🔄 **Fluxo de Dev (Desafio 2)** | [`docs/Fluxo-de-Desenvolvimento.md`](./docs/Fluxo-de-Desenvolvimento.md) | Git Flow (GitLab Flow), SemVer, esteira de releases, homologação, hotfix e rollback |
+| ⚙️ **Pipeline de CI/CD** | [`docs/Pipeline-CI-CD.md`](./docs/Pipeline-CI-CD.md) | GitHub Actions CI/CD, jobs de teste, ESLint, build check e estratégia de defesa em 2 camadas |
 | 📋 **Enunciado do Desafio** | [`docs/README-desafio.md`](./docs/README-desafio.md) | Requisitos e especificações originais do desafio técnico |
 
 ---
@@ -21,16 +24,18 @@ Substitui planilhas manuais por uma aplicação web profissional, permitindo cad
 O projeto adota uma variação simplificada e eficiente do **GitLab Flow**, combinada com o padrão de versionamento semântico **[SemVer](https://semver.org/)** (`MAJOR.MINOR.PATCH`):
 
 ```
-feature/1 ──(PR)──> main ──(Tag SemVer)──> Homologação ──(Aprovação)──> Produção
+feature/1 ──(PR)──> GitHub Actions CI ──(Merge)──> main ──(Tag SemVer)──> Homologação ──(Aprovação)──> Produção
 ```
 
 - **Branching Strategy**: O código instável de novas funcionalidades é desenvolvido em branches de feature (`feat/*` ou `fix/*`) e integrado à branch principal `main` exclusivamente através de **Pull Requests** com revisão por pares.
-- **Validação Automática (CI/CD Local)**: Antes de cada commit, os ganchos do `pre-commit` executam a suíte de 41 testes unitários (Vitest) e a checagem estática (ESLint).
+- **Validação Automática em Duas Camadas**:
+  - **Local (Pre-commit)**: Roda os 41 testes unitários (Vitest) e linter (ESLint) antes do commit.
+  - **Nuvem (GitHub Actions CI)**: Workflow [`.github/workflows/ci.yaml`](./.github/workflows/ci.yaml) executa em containers Linux limpos a cada PR para bloquear código quebrado no repositório remoto.
 - **Homologação & Tagging**: Cada release gera um incremento de versão nos arquivos `.version` e `CHANGELOG.md` e dispara uma **Tag Git** (ex: `v1.1.0`), enviando o build para o ambiente de **Homologação**.
 - **Hotfix & Rollback**: *Hotfixes* seguem o fluxo contínuo a partir da `main` com tag PATCH (ex: `v1.1.1`). *Rollbacks* em produção são executados re-disparando o deploy a partir de uma tag estável anterior.
 
-> 📖 **Para conferir a especificação completa do fluxo com diagrama visual:**
-> Acesse a documentação dedicada em [`docs/Fluxo-de-Desenvolvimento.md`](./docs/Fluxo-de-Desenvolvimento.md).
+> 📖 **Para conferir as especificações completas:**
+> Acesse [`docs/Fluxo-de-Desenvolvimento.md`](./docs/Fluxo-de-Desenvolvimento.md) para o processo de trabalho e [`docs/Pipeline-CI-CD.md`](./docs/Pipeline-CI-CD.md) para os detalhes do pipeline CI/CD no GitHub Actions.
 
 ---
 
@@ -125,7 +130,7 @@ pre-commit run --all-files
 | **Testes Backend** | Vitest 4 (Node environment) |
 | **Autenticação** | JWT (JSON Web Tokens) + bcryptjs |
 | **Validação** | Zod Schemas |
-| **Garantia de Qualidade** | Git Pre-commit Hooks + ESLint 9 |
+| **Garantia de Qualidade** | Git Pre-commit Hooks + GitHub Actions CI + ESLint 9 |
 
 ---
 
@@ -136,10 +141,15 @@ neogenomica-devtest/
 ├── docs/                         # Central de Documentações do Projeto
 │   ├── Backend-Documentation.md  # Especificação técnica do Backend
 │   ├── Frontend-Documentation.md # Especificação técnica do Frontend
-│   ├── Fluxo-de-Desenvolvimento.md # Git Flow, SemVer, CI/CD, Hotfix, Rollback
+│   ├── Fluxo-de-Desenvolvimento.md # Git Flow, SemVer, releases, hotfix, rollback
+│   ├── Pipeline-CI-CD.md         # Especificação da esteira CI/CD (GitHub Actions + Pre-commit)
 │   ├── README-desafio.md         # Requisitos originais do Desafio 1 e 2
 │   ├── Frontend-Plan.md          # Plano de arquitetura do Frontend
 │   └── Neogenomica.excalidraw    # Diagrama de fluxo editável
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yaml               # Esteira de CI/CD do GitHub Actions
 │
 ├── backend/                      # API REST Express + TypeScript
 │   ├── src/
@@ -183,7 +193,7 @@ Sala  →  Freezer  →  Gaveta  →  Caixa (grade N×M)  →  Posição (A1, B3
 - **🗺️ Mapa Visual Interativo**: Renderiza uma grade $N \times M$ com status de ocupação, cores por material e tooltips informativos.
 - **📥 Importação em Lote via CSV**: Drag-and-drop de arquivos `.csv` com processamento idempotente sem duplicar estruturas.
 - **📱 Responsividade Híbrida**: Sidebar fixo/comprimível no Desktop e **Mobile Bottom Navigation Bar** estilo aplicativo em celulares.
-- **🛡️ Qualidade & Segurança**: Autenticação JWT e suite de **41 testes unitários** protegendo a aplicação contra regressões.
+- **🛡️ Qualidade & Segurança**: Autenticação JWT, Pre-commit e GitHub Actions CI com **41 testes unitários** protegendo a aplicação contra regressões.
 
 ---
 
