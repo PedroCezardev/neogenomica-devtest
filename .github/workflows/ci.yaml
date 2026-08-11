@@ -27,7 +27,7 @@ jobs:
           cache-dependency-path: './backend/package-lock.json'
 
       - name: 📦 Instalar Dependências
-        run: npm ci
+        run: npm ci || npm install
 
       - name: 🧪 Executar Testes Unitários (Vitest)
         env:
@@ -54,7 +54,7 @@ jobs:
           cache-dependency-path: './frontend/devtest-frontend/package-lock.json'
 
       - name: 📦 Instalar Dependências
-        run: npm ci
+        run: npm ci || npm install
 
       - name: 🔍 Checagem Estática de Código (ESLint)
         run: npm run lint

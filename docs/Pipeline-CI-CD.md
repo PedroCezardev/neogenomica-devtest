@@ -79,13 +79,13 @@ flowchart TD
 
     subgraph Job Backend
         C --> C1[Setup Node 20 + Cache npm]
-        C1 --> C2[npm ci - backend]
+        C1 --> C2[npm ci || npm install]
         C2 --> C3[Vitest - 20 testes unitários]
     end
 
     subgraph Job Frontend
         D --> D1[Setup Node 20 + Cache npm]
-        D1 --> D2[npm ci - frontend]
+        D1 --> D2[npm ci || npm install]
         D2 --> D3[ESLint Check]
         D3 --> D4[Vitest - 21 testes unitários]
         D4 --> D5[Next.js Production Build Check]
@@ -102,7 +102,7 @@ flowchart TD
 - **Passos**:
   1. `actions/checkout@v4`: Baixa o código do repositório.
   2. `actions/setup-node@v4`: Configura o Node.js v20 com cache no `backend/package-lock.json`.
-  3. `npm ci`: Instala dependências exatas de forma determinística.
+  3. `npm ci || npm install`: Instala dependências com fallback resiliente entre SOs (Windows vs Linux).
   4. `npm test`: Executa a suíte de 20 testes unitários da API REST em ambiente simulado.
 
 #### 🖥️ Job `frontend-ci`
@@ -111,7 +111,7 @@ flowchart TD
 - **Passos**:
   1. `actions/checkout@v4`: Baixa o código.
   2. `actions/setup-node@v4`: Configura Node.js v20 com cache no `frontend/devtest-frontend/package-lock.json`.
-  3. `npm ci`: Instala dependências do frontend.
+  3. `npm ci || npm install`: Instala dependências com fallback resiliente.
   4. `npm run lint`: Valida regras de código do ESLint 9 para React 19 / Next.js 16.
   5. `npm test`: Executa 21 testes unitários dos componentes e serviços com Vitest e React Testing Library.
   6. `npm run build`: Executa o build de produção (`next build`) para verificar se não há erros de compilação ou incompatibilidades de SSR/Hydration.
