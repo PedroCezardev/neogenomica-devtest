@@ -6,12 +6,11 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     dedupe: ['react', 'react-dom'],
-    alias: [
-      { find: /^@\/(.*)$/, replacement: path.resolve(__dirname, './$1') },
-      { find: /^react$/, replacement: path.resolve(__dirname, '../../node_modules/react') },
-      { find: /^react-dom$/, replacement: path.resolve(__dirname, '../../node_modules/react-dom') },
-      { find: /^react-dom\/(.*)$/, replacement: path.resolve(__dirname, '../../node_modules/react-dom/$1') },
-    ],
+    alias: {
+      '@': path.resolve(__dirname, './'),
+      react: path.resolve(__dirname, './node_modules/react'),
+      'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+    },
   },
   test: {
     environment: 'jsdom',
