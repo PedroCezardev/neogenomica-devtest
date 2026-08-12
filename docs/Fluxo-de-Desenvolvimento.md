@@ -1,4 +1,4 @@
-# 🔄 Fluxo de Desenvolvimento e Git Flow (Desafio 2)
+# 🔄 Fluxo de Desenvolvimento
 
 > Este documento descreve o fluxo de desenvolvimento, gerenciamento de branches, estratégia de GitFlow, versionamento semântico (SemVer), processo de release, homologação, hotfix e rollback do projeto NeoGenomica.
 
@@ -19,34 +19,37 @@ feature/1 ──(PR)──> GitHub Actions CI ──(Merge)──> main ──(T
 ### 🎨 Diagrama de Planejamento Original
 ![Diagrama de Planejamento do Fluxo de Desenvolvimento](./Fluxo-desenvolvimento-image.png)
 
+> [!IMPORTANT]
+> **Nota sobre o Versionamento de Release**: O diagrama conceitual acima ilustra o bump de versão de forma sequencial separada apenas para fins didáticos de explicação. Na prática real da nossa esteira de CI/CD, no momento em que a Pull Request (PR) é revisada e integrada à branch principal (`main`), ela **já deve incluir a versão atualizada no arquivo `.version` e os registros de alteração devidamente descritos no `CHANGELOG.md`**.
+
 ---
 
 ### 🗺️ Fluxograma Interativo em Mermaid
+
 ```mermaid
 flowchart TD
     subgraph Desenvolvedor
-        A[Criar Branch feat/nova-feature] --> B[Desenvolver & Testar Localmente]
-        B --> C[Executar Pre-Commit Unit Tests & Lint]
-        C --> D[Abrir Pull Request para main]
+        A["Criar Branch feat/nova-feature ou fix/correcao"] --> B["Desenvolver & Testar Localmente"]
+        B --> C["Executar Pre-Commit Unit Tests & Lint"]
+        C --> D["Abrir Pull Request para main com .version & CHANGELOG.md"]
     end
 
     subgraph Esteira de CI / GitHub Actions
-        D --> E[Execução Automática do Pipeline .github/workflows/ci.yaml]
-        E --> F[Job 1: Backend Tests Vitest - 20 testes]
-        E --> G[Job 2: Frontend Lint, Tests Vitest & Build Check]
+        D --> E["Execução Automática do Pipeline .github/workflows/ci.yaml"]
+        E --> F["Job 1: Backend Tests Vitest - 20 testes"]
+        E --> G["Job 2: Frontend Lint, Tests Vitest & Build Check"]
     end
 
     subgraph Branch Principal main
-        F & G -->|Sucesso em todos os Jobs| H[Revisão por Pares & Merge na main]
-        H --> I[Bump da Versão em .version & CHANGELOG.md]
-        I --> J[Criar Tag Git ex: v1.1.0]
+        F & G -->|Sucesso em todos os Jobs| H["Revisão por Pares & Merge na main"]
+        H --> I["Criar Tag Git ex: v1.1.0"]
     end
 
     subgraph Homologação & Produção
-        J --> K[Deploy Automático em Homologação]
-        K --> L{Bateria de Testes QA / Cliente}
-        L -->|Aprovado| M[Trigger de Deploy em Produção]
-        L -->|Reprovado| N[Fix na main / Nova Tag]
+        I --> J["Deploy Automático em Homologação"]
+        J --> K{"Bateria de Testes QA / Cliente"}
+        K -->|Aprovado| L["Trigger de Deploy em Produção"]
+        K -->|Reprovado| A
     end
 ```
 

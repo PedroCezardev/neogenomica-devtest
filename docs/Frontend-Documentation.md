@@ -65,39 +65,9 @@ O design system da aplicação foi construído em Vanilla CSS + Tailwind v4 toke
 ```
 frontend/devtest-frontend/
 ├── app/                      # Rotas do Next.js (App Router)
-│   ├── (main)/               # Grupo de rotas protegidas (com AppShell)
-│   │   ├── page.tsx          # Dashboard Inicial (/)
-│   │   ├── estrutura/        # Gestão Física (Salas, Freezers, Gavetas, Caixas)
-│   │   ├── amostras/         # Listagem, Filtros e Importação CSV
-│   │   │   └── nova/         # Cadastro de Amostra com First-Fit
-│   │   └── caixas/[id]/mapa/ # Mapa Visual em Grade N x M
-│   ├── login/                # Página de Autenticação (Split-card)
-│   ├── layout.tsx            # RootLayout com AuthProvider e Metadata
-│   └── globals.css           # Design Tokens, Animações e Scrollbars
-│
+│   └── (main)/               # Grupo de rotas protegidas (com AppShell)
 ├── components/               # Componentes React Reutilizáveis
-│   ├── ui/                   # Design System básico (Button, Input, Select, Modal, Badge, StatCard...)
-│   ├── layout/               # AppShell, Sidebar (Collapsible), Header, MobileNav
-│   ├── estrutura/            # Modais de CRUD da hierarquia física
-│   ├── amostras/             # Filtros, Modal de Edição e ImportCSVModal
-│   ├── nova-amostra/         # SugestaoCard (Card visual do First-Fit)
-│   └── mapa/                 # BoxGrid, BoxCell e AmostraDetailModal
-│
 ├── services/                 # Comunicação HTTP e Regras de Consumo de API
-│   ├── api.ts                # Fetcher base (JWT Header Injection, ApiError, Upload)
-│   ├── auth.service.ts
-│   ├── sala.service.ts
-│   ├── freezer.service.ts
-│   ├── gaveta.service.ts
-│   ├── caixa.service.ts
-│   └── amostra.service.ts
-│
-├── contexts/
-│   └── AuthContext.tsx       # Contexto Global de Autenticação e Proteção de Rotas
-│
-├── types/
-│   └── index.ts              # Interfaces TypeScript compartilhadas
-│
 └── __tests__/                # Suíte de Testes Unitários (Vitest)
     ├── components/           # Testes de Componentes UI (Button, Badge, Input, Modal, SugestaoCard)
     └── services/             # Testes da camada HTTP e API
@@ -153,11 +123,11 @@ O `AuthContext.tsx` gerencia o estado da sessão do usuário em toda a aplicaç�
 
 ### 2. Estrutura Física (`/estrutura`)
 - **Navegação por 4 Tabs**: Alterna entre Salas, Freezers, Gavetas e Caixas.
-- **Grade Estática & Paginação**: Tabela contida em card estático (`min-h-[600px]`) com paginação limpa de 7 itens por página.
+- **Grade Estática & Paginação**: Tabela contida em card estático com paginação limpa de 8 a 10 itens por página.
 - **Modais Dedicados**: Formulários de criação e edição para cada nível hierárquico com seletores vinculados.
 
 ### 3. Amostras & Importação CSV (`/amostras`)
-- **Barra de Filtros Composta (`AmostraFiltros.tsx`)**: Permite pesquisar por texto (código ou paciente em modo `OR`), filtrar por material ou caixa e limpar filtros.
+- **Barra de Filtros Composta (`AmostraFiltros.tsx`)**: Permite pesquisar por texto (código, paciente ou exame), filtrar por material, freezer, gaveta e caixa específica.
 - **Importação CSV (`ImportCSVModal.tsx`)**: Modal com suporte a *drag-and-drop* para arquivos `.csv`, barra de progresso e exibição de relatório de importação em tempo real.
 
 ### 4. Cadastrar Amostra / First-Fit (`/amostras/nova`)
@@ -216,4 +186,4 @@ npm run test:watch
 
 ---
 
-*Documentação gerada em: 2026-08-11 — Frontend v1.1.0*
+*Documentação gerada em: 2026-08-12 — Frontend v1.2.0*

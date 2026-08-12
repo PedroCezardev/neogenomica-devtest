@@ -11,10 +11,6 @@
 3. [Camada 1 — Client-Side (Git Pre-Commit Hooks)](#3-camada-1--client-side-git-pre-commit-hooks)
 4. [Camada 2 — Server-Side (GitHub Actions CI Pipeline)](#4-camada-2--server-side-github-actions-ci-pipeline)
 5. [Especificação do Workflow YAML (`.github/workflows/ci.yaml`)](#5-especificação-do-workflow-yaml-githubworkflowsciyaml)
-6. [Otimização de Performance e Cache](#6-otimização-de-performance-e-cache)
-7. [Injeção de Segredos e Variáveis de Ambiente](#7-injeção-de-segredos-e-variáveis-de-ambiente)
-8. [Fluxo de Promoção e CD (Continuous Delivery)](#8-fluxo-de-promoção-e-cd-continuous-delivery)
-9. [Containerização com Docker & Docker Compose](#9-containerização-com-docker--docker-compose)
 
 ---
 
@@ -74,25 +70,25 @@ O workflow é composto por **2 Jobs paralelos**:
 
 ```mermaid
 flowchart TD
-    A[Disparo: Push ou Pull Request] --> B{GitHub Actions Runner}
-    B --> C[Job: backend-ci]
-    B --> D[Job: frontend-ci]
+    A["Disparo: Push ou Pull Request"] --> B{"GitHub Actions Runner"}
+    B --> C["Job: backend-ci"]
+    B --> D["Job: frontend-ci"]
 
     subgraph Job Backend
-        C --> C1[Setup Node 20 + Cache npm]
-        C1 --> C2[npm ci || npm install]
-        C2 --> C3[Vitest - 20 testes unitários]
+        C --> C1["Setup Node 20 + Cache npm"]
+        C1 --> C2["Instalar Dependências (npm ci / npm install)"]
+        C2 --> C3["Vitest - 20 testes unitários"]
     end
 
     subgraph Job Frontend
-        D --> D1[Setup Node 20 + Cache npm]
-        D1 --> D2[npm ci || npm install]
-        D2 --> D3[ESLint Check]
-        D3 --> D4[Vitest - 21 testes unitários]
-        D4 --> D5[Next.js Production Build Check]
+        D --> D1["Setup Node 20 + Cache npm"]
+        D1 --> D2["Instalar Dependências (npm ci / npm install)"]
+        D2 --> D3["ESLint Check"]
+        D3 --> D4["Vitest - 21 testes unitários"]
+        D4 --> D5["Next.js Production Build Check"]
     end
 
-    C3 & D5 --> E[Quality Gate Approved ✅]
+    C3 & D5 --> E["Quality Gate Approved ✅"]
 ```
 
 ### Detalhamento dos Jobs
@@ -117,60 +113,4 @@ flowchart TD
   5. `npm test`: Executa 21 testes unitários dos componentes e serviços com Vitest e React Testing Library.
   6. `npm run build`: Executa o build de produção (`next build`) para verificar se não há erros de compilação ou incompatibilidades de SSR/Hydration.
 
----
-
-## 6. Otimização de Performance e Cache
-
-Para reduzir a duração da execução no GitHub Actions e economizar minutos de runner:
-
-- **Cache de Dependências (`npm`)**: A action `actions/setup-node@v4` foi configurada com `cache: 'npm'` vinculada ao `package-lock.json` de cada subprojeto.
-- **Jobs Paralelos**: O job do backend e do frontend rodam simultaneamente em runners separados, reduzindo o tempo total da esteira pela metade.
-
----
-
-## 7. Injeção de Segredos e Variáveis de Ambiente
-
-Nos testes do backend, o workflow injeta automaticamente a variável de ambiente `JWT_SECRET` necessária para validar a geração e decodificação dos tokens JWT durante a suíte de testes:
-
-```yaml
-- name: 🧪 Executar Testes Unitários (Vitest)
-  env:
-    JWT_SECRET: 'secret-teste-ci-pipeline-123'
-  run: npm test
-```
-
----
-
-## 8. Fluxo de Promoção e CD (Continuous Delivery)
-
-1. **Aprovação do PR**: Após o sucesso dos jobs `backend-ci` e `frontend-ci`, o Pull Request recebe a aprovação automatizada no GitHub.
-2. **Merge na `main`**: O código é integrado à branch estável.
-3. **Criação da Tag (Release)**: A criação de uma tag SemVer (ex: `v1.1.0`) dispara a esteira de **Deploy em Homologação**, permitindo validação funcional QA antes da promoção para o ambiente de **Produção**.
-
----
-
-## 9. Containerização com Docker & Docker Compose
-
-Para garantir paridade de ambientes e empacotamento de releases imutáveis, a aplicação possui suporte nativo a **Multi-stage Docker Builds**:
-
-### Arquivos de Configuração
-- [`backend/Dockerfile`](../backend/Dockerfile): Compila TypeScript, gera o Prisma Client e expõe a porta `3001` sobre `node:20-alpine`.
-- [`frontend/devtest-frontend/Dockerfile`](../frontend/devtest-frontend/Dockerfile): Compila o Next.js 16 e expõe o servidor de produção na porta `3000`.
-- [`docker-compose.yml`](../docker-compose.yml): Orquestra os containers `neogenomica-backend` e `neogenomica-frontend`.
-
-### Executando com Docker Compose
-
-```bash
-# Subir toda a aplicação em containers
-docker compose up --build -d
-
-# Visualizar logs em tempo real
-docker compose logs -f
-
-# Encerrar os containers
-docker compose down
-```
-
----
-
-*Documentação gerada em: 2026-08-11 — Pipeline CI/CD & Docker v1.1.0*
+*Documentação gerada em: 2026-08-12 — Pipeline CI/CD & Docker v1.1.0*
