@@ -1,6 +1,6 @@
 # ⚙️ Pipeline de CI/CD — Documentação Técnica
 
-> Este documento descreve a arquitetura da esteira de Integração Contínua (CI) e Entrega Contínua (CD) do projeto NeoGenomica, abrangendo a estratégia de defesa em duas camadas: **Pre-commit local** e **GitHub Actions na nuvem**.
+> Este documento descreve a arquitetura da esteira de Integração Contínua (CI) e Entrega Contínua (CD) do projeto NeoGenomica, abrangendo a estratégia de defesa em duas camadas: **Pre-commit local**, **GitHub Actions na nuvem** e **Containerização com Docker**.
 
 ---
 
@@ -14,6 +14,7 @@
 6. [Otimização de Performance e Cache](#6-otimização-de-performance-e-cache)
 7. [Injeção de Segredos e Variáveis de Ambiente](#7-injeção-de-segredos-e-variáveis-de-ambiente)
 8. [Fluxo de Promoção e CD (Continuous Delivery)](#8-fluxo-de-promoção-e-cd-continuous-delivery)
+9. [Containerização com Docker & Docker Compose](#9-containerização-com-docker--docker-compose)
 
 ---
 
@@ -148,4 +149,28 @@ Nos testes do backend, o workflow injeta automaticamente a variável de ambiente
 
 ---
 
-*Documentação gerada em: 2026-08-11 — Pipeline CI/CD v1.0.0*
+## 9. Containerização com Docker & Docker Compose
+
+Para garantir paridade de ambientes e empacotamento de releases imutáveis, a aplicação possui suporte nativo a **Multi-stage Docker Builds**:
+
+### Arquivos de Configuração
+- [`backend/Dockerfile`](../backend/Dockerfile): Compila TypeScript, gera o Prisma Client e expõe a porta `3001` sobre `node:20-alpine`.
+- [`frontend/devtest-frontend/Dockerfile`](../frontend/devtest-frontend/Dockerfile): Compila o Next.js 16 e expõe o servidor de produção na porta `3000`.
+- [`docker-compose.yml`](../docker-compose.yml): Orquestra os containers `neogenomica-backend` e `neogenomica-frontend`.
+
+### Executando com Docker Compose
+
+```bash
+# Subir toda a aplicação em containers
+docker compose up --build -d
+
+# Visualizar logs em tempo real
+docker compose logs -f
+
+# Encerrar os containers
+docker compose down
+```
+
+---
+
+*Documentação gerada em: 2026-08-11 — Pipeline CI/CD & Docker v1.1.0*

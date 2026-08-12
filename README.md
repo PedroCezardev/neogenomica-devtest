@@ -15,7 +15,7 @@ Substitui planilhas manuais por uma aplicação web profissional, permitindo cad
 | 🖥️ **Frontend** | [`docs/Frontend-Documentation.md`](./docs/Frontend-Documentation.md) | Next.js 16, React 19, Design System, componentes, estado global, navegação mobile e testes |
 | ⚙️ **Backend** | [`docs/Backend-Documentation.md`](./docs/Backend-Documentation.md) | API Express, Prisma ORM, PostgreSQL (Supabase), Zod, autenticação JWT, algoritmo First-Fit e testes |
 | 🔄 **Fluxo de Dev (Desafio 2)** | [`docs/Fluxo-de-Desenvolvimento.md`](./docs/Fluxo-de-Desenvolvimento.md) | Git Flow (GitLab Flow), SemVer, esteira de releases, homologação, hotfix e rollback |
-| ⚙️ **Pipeline de CI/CD** | [`docs/Pipeline-CI-CD.md`](./docs/Pipeline-CI-CD.md) | GitHub Actions CI/CD, jobs de teste, ESLint, build check e estratégia de defesa em 2 camadas |
+| ⚙️ **Pipeline de CI/CD & Docker** | [`docs/Pipeline-CI-CD.md`](./docs/Pipeline-CI-CD.md) | GitHub Actions CI/CD, Docker multi-stage, jobs de teste, ESLint, build check e 2 camadas de defesa |
 | 📋 **Enunciado do Desafio** | [`docs/README-desafio.md`](./docs/README-desafio.md) | Requisitos e especificações originais do desafio técnico |
 
 ---
@@ -42,48 +42,41 @@ feature/1 ──(PR)──> GitHub Actions CI ──(Merge)──> main ──(T
 
 ## ⚡ Quick Start
 
-### Pré-requisitos
-- **Node.js** v18+ instalado
-- Instância do **PostgreSQL** (ou conta no [Supabase](https://supabase.com))
-
----
-
-### 1. Subindo o Backend (API REST)
+### 🐳 Opção 1: Execução Rápida via Docker Compose (Recomendado)
 
 ```bash
-# 1. Entrar na pasta do backend
-cd backend
+# Subir todo o ambiente Fullstack (Backend + Frontend) em containers isolados
+docker compose up --build -d
 
-# 2. Instalar dependências
-npm install
+# Visualizar os logs em tempo real
+docker compose logs -f
 
-# 3. Configurar variáveis de ambiente (.env)
-cp .env.example .env
-# → edite o .env com suas credenciais do PostgreSQL/Supabase
-
-# 4. Rodar as migrações do banco de dados
-npx prisma migrate dev
-
-# 5. Popular o banco com dados reais de exemplo (opcional)
-npm run seed
-
-# 6. Iniciar o servidor em modo desenvolvimento
-npm run dev
-# → API rodando em http://localhost:3001
+# Acessar a aplicação:
+# → Frontend: http://localhost:3000
+# → API Backend: http://localhost:3001
 ```
 
 ---
 
-### 2. Subindo o Frontend (Next.js)
+### 💻 Opção 2: Execução Local sem Docker
+
+#### 1. Subindo o Backend (API REST)
 
 ```bash
-# 1. Entrar na pasta do frontend
-cd frontend/devtest-frontend
-
-# 2. Instalar dependências
+cd backend
 npm install
+cp .env.example .env
+npx prisma migrate dev
+npm run seed
+npm run dev
+# → API rodando em http://localhost:3001
+```
 
-# 3. Iniciar o servidor em modo desenvolvimento
+#### 2. Subindo o Frontend (Next.js)
+
+```bash
+cd frontend/devtest-frontend
+npm install
 npm run dev
 # → Aplicação rodando em http://localhost:3000
 ```
@@ -129,6 +122,7 @@ pre-commit run --all-files
 | **Backend Core** | Node.js + Express 5 + TypeScript |
 | **Banco de Dados** | PostgreSQL (Supabase) + Prisma ORM 6 |
 | **Testes Backend** | Vitest 4 (Node environment) |
+| **Containerização** | Docker Multi-Stage Build + Docker Compose |
 | **Autenticação** | JWT (JSON Web Tokens) + bcryptjs |
 | **Validação** | Zod Schemas |
 | **Garantia de Qualidade** | Git Pre-commit Hooks + GitHub Actions CI + ESLint 9 |
@@ -144,9 +138,7 @@ neogenomica-devtest/
 │   ├── Backend-Documentation.md  # Especificação técnica do Backend
 │   ├── Frontend-Documentation.md # Especificação técnica do Frontend
 │   ├── Fluxo-de-Desenvolvimento.md # Git Flow, SemVer, releases, hotfix, rollback
-│   ├── Pipeline-CI-CD.md         # Especificação da esteira CI/CD (GitHub Actions + Pre-commit)
-│   ├── README-desafio.md         # Requisitos originais do Desafio 1 e 2
-│   ├── Frontend-Plan.md          # Plano de arquitetura do Frontend
+│   ├── Pipeline-CI-CD.md         # Especificação da esteira CI/CD (GitHub Actions + Docker)
 │   └── Neogenomica.excalidraw    # Diagrama de fluxo editável
 │
 ├── .github/
@@ -162,16 +154,17 @@ neogenomica-devtest/
 │   │   ├── middlewares/          # Autenticação JWT e Tratamento Global de Erros
 │   │   ├── routes/               # Rotas HTTP
 │   │   └── __tests__/            # 20 Testes Unitários (Vitest)
+│   ├── Dockerfile                # Multi-stage Dockerfile do Backend
 │   └── prisma/                   # Schema Prisma, Migrações e Seed
 │
 ├── frontend/                     # Aplicação Web Next.js 16 + React 19
 │   └── devtest-frontend/
+│       ├── Dockerfile            # Multi-stage Dockerfile do Frontend
+│       ├── .dockerignore         # Exclusões de build do Docker
 │       ├── app/                  # Rotas (Dashboard, Estrutura, Amostras, Mapa, Login)
-│       ├── components/           # UI, Modais, BoxGrid, Sidebar Collapsible, MobileNav
-│       ├── services/             # Chamadas HTTP (api.ts, auth, amostras...)
-│       ├── contexts/             # Contexto de Autenticação
-│       └── __tests__/            # 21 Testes Unitários (Vitest + RTL)
+│       └── components/           # UI, Modais, BoxGrid, Sidebar Collapsible, MobileNav
 │
+├── docker-compose.yml            # Orquestrador de Containers (Backend + Frontend)
 ├── .pre-commit-config.yaml       # Configuração dos Hooks Git de Pre-Commit
 ├── README.md                     # Visão Geral do Projeto
 └── amostras_exemplo.csv          # Dados de exemplo do laboratório
@@ -195,6 +188,7 @@ Sala  →  Freezer  →  Gaveta  →  Caixa (grade N×M)  →  Posição (A1, B3
 - **🗺️ Mapa Visual Interativo**: Renderiza uma grade $N \times M$ com status de ocupação, cores por material e tooltips informativos.
 - **📥 Importação em Lote via CSV**: Drag-and-drop de arquivos `.csv` com processamento idempotente sem duplicar estruturas.
 - **📱 Responsividade Híbrida**: Sidebar fixo/comprimível no Desktop e **Mobile Bottom Navigation Bar** estilo aplicativo em celulares.
+- **🐳 Containerização de Produção**: Suporte completo a Docker Multi-Stage e Docker Compose para execução isolada e reprodutível.
 - **🛡️ Qualidade & Segurança**: Autenticação JWT, Pre-commit e GitHub Actions CI com **41 testes unitários** protegendo a aplicação contra regressões.
 
 ---
