@@ -5,8 +5,7 @@ import { createAmostraDto, updateAmostraDto } from '../dtos/amostra.dto';
 export const amostraController = {
   async findAll(req: Request, res: Response, next: NextFunction) {
     try {
-      // Suporta filtros via query string: ?codigoAmostra=A01&pacienteNome=João&material=DNA
-      const { busca, codigoAmostra, pacienteNome, material, exame, caixaId } = req.query;
+      const { busca, codigoAmostra, pacienteNome, material, exame, freezerId, gavetaId, caixaId } = req.query;
 
       const amostras = await amostraService.findAll({
         busca: busca as string | undefined,
@@ -14,6 +13,8 @@ export const amostraController = {
         pacienteNome: pacienteNome as string | undefined,
         material: material as string | undefined,
         exame: exame as string | undefined,
+        freezerId: freezerId ? Number(freezerId) : undefined,
+        gavetaId: gavetaId ? Number(gavetaId) : undefined,
         caixaId: caixaId ? Number(caixaId) : undefined,
       });
 

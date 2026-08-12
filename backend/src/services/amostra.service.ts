@@ -11,6 +11,8 @@ export const amostraService = {
     pacienteNome?: string;
     material?: string;
     exame?: string;
+    freezerId?: number;
+    gavetaId?: number;
     caixaId?: number;
   }) {
     return amostraRepository.findAll(filtros);

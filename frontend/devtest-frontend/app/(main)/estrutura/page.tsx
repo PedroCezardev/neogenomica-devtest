@@ -18,7 +18,7 @@ import CaixaModal from '@/components/estrutura/CaixaModal';
 import ConfirmDeleteModal from '@/components/estrutura/ConfirmDeleteModal';
 
 type TabType = 'salas' | 'freezers' | 'gavetas' | 'caixas';
-const ITEMS_PER_PAGE = 7;
+const ITEMS_PER_PAGE = 8;
 
 // Ícones SVG profissionais
 const SalaIcon = () => (
@@ -472,7 +472,7 @@ export default function EstruturaPage() {
       </div>
 
       {/* Conteúdo da Tab Ativa */}
-      <div className="bg-card rounded-2xl p-6 border border-border shadow-sm flex flex-col justify-between min-h-[600px]">
+      <div className="bg-card rounded-2xl p-6 border border-border shadow-sm flex flex-col justify-between">
         <div className="flex-1">
           {activeTab === 'salas' && (
             <Table

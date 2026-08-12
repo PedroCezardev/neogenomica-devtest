@@ -3,15 +3,21 @@
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import Button from '@/components/ui/Button';
-import { Caixa } from '@/types';
+import { Caixa, Freezer, Gaveta } from '@/types';
 
 interface AmostraFiltrosProps {
   busca: string;
   onBuscaChange: (v: string) => void;
   material: string;
   onMaterialChange: (v: string) => void;
+  freezerId: string;
+  onFreezerIdChange: (v: string) => void;
+  gavetaId: string;
+  onGavetaIdChange: (v: string) => void;
   caixaId: string;
   onCaixaIdChange: (v: string) => void;
+  freezers: Freezer[];
+  gavetas: Gaveta[];
   caixas: Caixa[];
   onLimpar: () => void;
 }
@@ -35,12 +41,18 @@ export default function AmostraFiltros({
   onBuscaChange,
   material,
   onMaterialChange,
+  freezerId,
+  onFreezerIdChange,
+  gavetaId,
+  onGavetaIdChange,
   caixaId,
   onCaixaIdChange,
+  freezers,
+  gavetas,
   caixas,
   onLimpar,
 }: AmostraFiltrosProps) {
-  const temFiltroAtivo = Boolean(busca || material || caixaId);
+  const temFiltroAtivo = Boolean(busca || material || freezerId || gavetaId || caixaId);
 
   const materialOptions = [
     { value: '', label: 'Todos os materiais' },
@@ -50,57 +62,113 @@ export default function AmostraFiltros({
     { value: 'Outros', label: 'Outros' },
   ];
 
+  const freezerOptions = [
+    { value: '', label: 'Todos freezers' },
+    ...freezers.map((f) => ({
+      value: String(f.id),
+      label: f.nome,
+    })),
+  ];
+
+  const gavetaFiltradas = freezerId
+    ? gavetas.filter((g) => g.freezerId === Number(freezerId))
+    : gavetas;
+
+  const gavetaOptions = [
+    { value: '', label: 'Todas gavetas' },
+    ...gavetaFiltradas.map((g) => ({
+      value: String(g.id),
+      label: g.nome,
+    })),
+  ];
+
+  const caixasFiltradas = gavetaId
+    ? caixas.filter((c) => c.gavetaId === Number(gavetaId))
+    : caixas;
+
   const caixaOptions = [
-    { value: '', label: 'Todas as caixas' },
-    ...caixas.map((c) => ({
+    { value: '', label: 'Todas caixas' },
+    ...caixasFiltradas.map((c) => ({
       value: String(c.id),
       label: c.nome,
     })),
   ];
 
   return (
-    <div className="bg-card p-4 rounded-2xl border border-border shadow-sm flex flex-col md:flex-row items-stretch md:items-end gap-3">
-      {/* Busca por código ou paciente */}
-      <div className="flex-1">
-        <Input
-          label="Buscar por Código ou Paciente"
-          placeholder="Ex: A01001000..., Ana Silva..."
-          leftIcon={<SearchIcon />}
-          value={busca}
-          onChange={(e) => onBuscaChange(e.target.value)}
-        />
-      </div>
+    <div className="bg-card p-4 rounded-2xl border border-border shadow-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-end">
+        {/* Busca por código ou paciente - 3 colunas (Maior que os outros) */}
+        <div className={temFiltroAtivo ? 'lg:col-span-3' : 'lg:col-span-4'}>
+          <Input
+            label="Buscar Código / Paciente / Exame"
+            placeholder="Ex: A01001..., Ana Silva..."
+            leftIcon={<SearchIcon />}
+            value={busca}
+            onChange={(e) => onBuscaChange(e.target.value)}
+          />
+        </div>
 
-      {/* Filtro de Material */}
-      <div className="w-full md:w-48">
-        <Select
-          label="Tipo de Material"
-          options={materialOptions}
-          value={material}
-          onChange={(e) => onMaterialChange(e.target.value)}
-        />
-      </div>
+        {/* Filtro de Material - 2 colunas */}
+        <div className="lg:col-span-2">
+          <Select
+            label="Tipo de Material"
+            options={materialOptions}
+            value={material}
+            onChange={(e) => onMaterialChange(e.target.value)}
+          />
+        </div>
 
-      {/* Filtro de Caixa */}
-      <div className="w-full md:w-56">
-        <Select
-          label="Caixa Específica"
-          options={caixaOptions}
-          value={caixaId}
-          onChange={(e) => onCaixaIdChange(e.target.value)}
-        />
-      </div>
+        {/* Filtro de Freezer - 2 colunas */}
+        <div className="lg:col-span-2">
+          <Select
+            label="Freezer"
+            options={freezerOptions}
+            value={freezerId}
+            onChange={(e) => {
+              onFreezerIdChange(e.target.value);
+              onGavetaIdChange('');
+              onCaixaIdChange('');
+            }}
+          />
+        </div>
 
-      {/* Botão de Limpar Filtros */}
-      {temFiltroAtivo && (
-        <Button
-          variant="outline"
-          onClick={onLimpar}
-          className="h-[38px] gap-1.5 text-xs self-end"
-        >
-          <FilterResetIcon /> Limpar
-        </Button>
-      )}
+        {/* Filtro de Gaveta - 2 colunas */}
+        <div className="lg:col-span-2">
+          <Select
+            label="Gaveta"
+            options={gavetaOptions}
+            value={gavetaId}
+            onChange={(e) => {
+              onGavetaIdChange(e.target.value);
+              onCaixaIdChange('');
+            }}
+          />
+        </div>
+
+        {/* Filtro de Caixa Específica - Proporcional e elegante */}
+        <div className={temFiltroAtivo ? 'lg:col-span-2' : 'lg:col-span-2'}>
+          <Select
+            label="Caixa Específica"
+            options={caixaOptions}
+            value={caixaId}
+            onChange={(e) => onCaixaIdChange(e.target.value)}
+          />
+        </div>
+
+        {/* Botão de Limpar Filtros - 1 coluna */}
+        {temFiltroAtivo && (
+          <div className="lg:col-span-1">
+            <Button
+              variant="outline"
+              onClick={onLimpar}
+              className="h-[38px] w-full gap-1 text-xs justify-center"
+              title="Limpar todos os filtros"
+            >
+              <FilterResetIcon /> Limpar
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

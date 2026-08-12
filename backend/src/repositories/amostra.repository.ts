@@ -9,6 +9,8 @@ export const amostraRepository = {
     pacienteNome?: string;
     material?: string;
     exame?: string;
+    freezerId?: number;
+    gavetaId?: number;
     caixaId?: number;
   }) {
     const searchTerm = filtros?.busca || (filtros?.codigoAmostra === filtros?.pacienteNome ? filtros?.codigoAmostra : undefined);
@@ -33,6 +35,8 @@ export const amostraRepository = {
         ...(filtros?.material && { material: filtros.material }),
         ...(filtros?.exame && { exame: { contains: filtros.exame, mode: 'insensitive' } }),
         ...(filtros?.caixaId && { caixaId: filtros.caixaId }),
+        ...(filtros?.gavetaId && { caixa: { gavetaId: filtros.gavetaId } }),
+        ...(filtros?.freezerId && { caixa: { gaveta: { freezerId: filtros.freezerId } } }),
       },
       include: {
         caixa: {

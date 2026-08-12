@@ -5,16 +5,18 @@ import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import Table, { Column } from '@/components/ui/Table';
 import Badge, { materialVariant } from '@/components/ui/Badge';
-import { Amostra, Caixa } from '@/types';
+import { Amostra, Caixa, Freezer, Gaveta } from '@/types';
 import { amostraService } from '@/services/amostra.service';
 import { caixaService } from '@/services/caixa.service';
+import { freezerService } from '@/services/freezer.service';
+import { gavetaService } from '@/services/gaveta.service';
 
 import AmostraFiltros from '@/components/amostras/AmostraFiltros';
 import ImportCSVModal from '@/components/amostras/ImportCSVModal';
 import EditAmostraModal from '@/components/amostras/EditAmostraModal';
 import ConfirmDeleteModal from '@/components/estrutura/ConfirmDeleteModal';
 
-const ITEMS_PER_PAGE = 7;
+const ITEMS_PER_PAGE = 10;
 
 // Ícones SVG profissionais
 const ImportIcon = () => (
@@ -55,6 +57,8 @@ const MapIcon = () => (
 
 export default function AmostrasPage() {
   const [amostras, setAmostras] = useState<Amostra[]>([]);
+  const [freezers, setFreezers] = useState<Freezer[]>([]);
+  const [gavetas, setGavetas] = useState<Gaveta[]>([]);
   const [caixas, setCaixas] = useState<Caixa[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -62,6 +66,8 @@ export default function AmostrasPage() {
   // Filtros
   const [busca, setBusca] = useState('');
   const [material, setMaterial] = useState('');
+  const [freezerId, setFreezerId] = useState('');
+  const [gavetaId, setGavetaId] = useState('');
   const [caixaId, setCaixaId] = useState('');
 
   // Modais
@@ -70,9 +76,17 @@ export default function AmostrasPage() {
   const [amostraToDelete, setAmostraToDelete] = useState<Amostra | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  // Carrega caixas para o select de filtros
+  // Carrega opções de freezers, gavetas e caixas para os selects de filtros
   useEffect(() => {
-    caixaService.getAll().then(setCaixas).catch(() => []);
+    Promise.all([
+      freezerService.getAll().catch(() => []),
+      gavetaService.getAll().catch(() => []),
+      caixaService.getAll().catch(() => []),
+    ]).then(([fData, gData, cData]) => {
+      setFreezers(fData);
+      setGavetas(gData);
+      setCaixas(cData);
+    });
   }, []);
 
   // Carrega amostras com filtros aplicados
@@ -82,6 +96,8 @@ export default function AmostrasPage() {
       const data = await amostraService.getAll({
         busca: busca.trim() || undefined,
         material: material || undefined,
+        freezerId: freezerId ? Number(freezerId) : undefined,
+        gavetaId: gavetaId ? Number(gavetaId) : undefined,
         caixaId: caixaId ? Number(caixaId) : undefined,
       });
       setAmostras(data);
@@ -90,7 +106,7 @@ export default function AmostrasPage() {
     } finally {
       setLoading(false);
     }
-  }, [busca, material, caixaId]);
+  }, [busca, material, freezerId, gavetaId, caixaId]);
 
   useEffect(() => {
     loadAmostras();
@@ -100,6 +116,8 @@ export default function AmostrasPage() {
   function handleLimparFiltros() {
     setBusca('');
     setMaterial('');
+    setFreezerId('');
+    setGavetaId('');
     setCaixaId('');
   }
 
@@ -267,14 +285,20 @@ export default function AmostrasPage() {
         onBuscaChange={setBusca}
         material={material}
         onMaterialChange={setMaterial}
+        freezerId={freezerId}
+        onFreezerIdChange={setFreezerId}
+        gavetaId={gavetaId}
+        onGavetaIdChange={setGavetaId}
         caixaId={caixaId}
         onCaixaIdChange={setCaixaId}
+        freezers={freezers}
+        gavetas={gavetas}
         caixas={caixas}
         onLimpar={handleLimparFiltros}
       />
 
       {/* Tabela de Amostras */}
-      <div className="bg-card rounded-2xl p-6 border border-border shadow-sm flex flex-col justify-between min-h-[550px]">
+      <div className="bg-card rounded-2xl p-6 border border-border shadow-sm flex flex-col justify-between">
         <div className="flex-1">
           <Table
             columns={columns}
