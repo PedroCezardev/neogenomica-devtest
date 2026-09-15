@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "csv-parse": "^7.0.2",
+    "multer": "^2.2.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/react": "^16.3.2",
+    "@types/multer": "^2.2.0",
+    "@vitejs/plugin-react": "^6.0.5",
+    "jsdom": "^29.1.1",
+    "vitest": "^4.1.10"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "scripts": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}

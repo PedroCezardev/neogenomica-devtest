@@ -1,0 +1,30 @@
+name: neogenomica-app
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: neogenomica-backend
+    restart: always
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./backend/.env
+    environment:
+      - PORT=3001
+      - NODE_ENV=production
+
+  frontend:
+    build:
+      context: ./frontend/devtest-frontend
+      dockerfile: Dockerfile
+    container_name: neogenomica-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:3001/api
+    depends_on:
+      - backend

@@ -1,0 +1,127 @@
+// Prisma Schema — NeoGenomica
+// Documentação: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")       // pooler (porta 6543) — usado em runtime
+  directUrl = env("DIRECT_URL")         // conexão direta (porta 5432) — usado em migrations
+}
+
+// ─────────────────────────────────────────────
+// HIERARQUIA FÍSICA:
+// Sala → Freezer → Gaveta → Caixa → Amostra
+// ─────────────────────────────────────────────
+
+model Sala {
+  id       Int       @id @default(autoincrement())
+  nome     String    @unique
+
+  freezers Freezer[]
+
+  criadoEm DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("salas")
+}
+
+model Freezer {
+  id         Int     @id @default(autoincrement())
+  nome       String
+  // NOTA: A temperatura fica embutida no nome (ex: "-20C (Amostras)"),
+  // pois é assim que os dados reais chegam no CSV. Simplifica o modelo.
+
+  // BÔNUS: limite de gavetas neste freezer (null = sem limite)
+  maxGavetas Int?
+
+  salaId Int
+  sala   Sala   @relation(fields: [salaId], references: [id], onDelete: Cascade)
+
+  gavetas Gaveta[]
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("freezers")
+}
+
+model Gaveta {
+  id   Int    @id @default(autoincrement())
+  nome String
+
+  // BÔNUS: limite de caixas nesta gaveta (null = sem limite)
+  maxCaixas Int?
+
+  freezerId Int
+  freezer   Freezer @relation(fields: [freezerId], references: [id], onDelete: Cascade)
+
+  caixas Caixa[]
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("gavetas")
+}
+
+model Caixa {
+  id      Int    @id @default(autoincrement())
+  nome    String
+
+  // Define o tamanho da grade: 10 linhas (A-J) x 10 colunas (1-10) = 100 posições
+  linhas  Int
+  colunas Int
+
+  gavetaId Int
+  gaveta   Gaveta @relation(fields: [gavetaId], references: [id], onDelete: Cascade)
+
+  amostras Amostra[]
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("caixas")
+}
+
+model Amostra {
+  id Int @id @default(autoincrement())
+
+  // Identificador da amostra — pode ser nulo (visto no CSV real, linha F1 sem código)
+  // Não é @unique pois o CSV de exemplo mostra o mesmo código em posições diferentes
+  // (mesmo tubo duplicado para controle). Discutir na entrevista.
+  codigoAmostra String?
+
+  pacienteNome     String
+  concentracaoNgUl Float?  // pode ser nulo (ex: Controle Swab sem concentração medida)
+  material         String  // ex: "DNA", "Swab bucal"
+  exame            String? // ex: "CONTROLE INTERNO NEOGENOMICA"
+  observacao       String?
+
+  // ─── Localização física ───
+  // Posição armazenada como string (ex: "A1", "C3")
+  // As posições possíveis são calculadas dinamicamente: A..N_linhas × 1..N_colunas
+  // Não usamos tabela separada de Posicao — ver discussão de arquitetura.
+  posicao String // ex: "A1", "B3", "J10"
+
+  caixaId Int
+  caixa   Caixa @relation(fields: [caixaId], references: [id])
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("amostras")
+}
+
+model Usuario {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  nome  String
+  senha String // hash bcrypt — NUNCA armazenar senha em texto puro
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("usuarios")
+}

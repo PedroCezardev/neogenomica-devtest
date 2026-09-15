@@ -1,183 +1,199 @@
-# Teste Dev 2026 🧬🧊
+# 🧬 NeoGenomica — Sistema de Gerenciamento de Microtubos de DNA
 
-Por que trabalhar na NeoGenomica ?
-===============================
+[![CI Pipeline](https://github.com/PedroCezardev/neogenomica-devtest/actions/workflows/ci.yaml/badge.svg)](https://github.com/PedroCezardev/neogenomica-devtest/actions/workflows/ci.yaml)
 
-A NeoGenomica entra no mercado como um dos principais laboratórios do Brasil a oferecer tecnologia de sequenciamento genético de nova geração, focada na identificação, análise e diagnóstico de doenças raras. Além disso, disponibilizamos uma ampla gama de exames genéticos voltados para análises clínicas.
-
-Nossa equipe é composta por especialistas renomados — biomédicos, médicos e bioinformatas — que utilizam tecnologias de ponta para realizar testes genéticos. No dia a dia da bancada, manipulamos **milhares de microtubos de DNA** guardados em freezers, e hoje esse controle é feito em planilha. Queremos evoluir isso para uma ferramenta de verdade.
-
-Exemplos de armazenamento de amostras microtubos em freezer
-
-<table>
-  <tr>
-    <td width="50%"><img alt="Amostras em microtubos no freezer" src="https://github.com/user-attachments/assets/238380c8-8cfb-4c7d-8b6b-903973ea27b7" /></td>
-    <td width="50%"><img alt="Caixa/rack de microtubos" src="https://github.com/user-attachments/assets/5be62804-6403-42e8-bc47-b51b5f815159" /></td>
-  </tr>
-</table>
-
+Sistema **Full Stack** desenvolvido para o desafio técnico NeoGenomica 2026.
+Substitui planilhas manuais por uma aplicação web profissional, permitindo cadastrar, buscar e visualizar a localização exata de microtubos de DNA em tempo real.
 
 ---
 
-## Teste técnico para processo seletivo NeoGenomica
+## 📚 Central de Documentações (`/docs`)
 
-## 🎯 Objetivo
-
-Criar uma aplicação web **Full Stack** (front-end + back-end) para o **gerenciamento de estoque de microtubos de DNA** do nosso laboratório. Hoje fazemos isso em planilha (veja `amostras_exemplo.csv`); o objetivo é substituir a planilha por um sistema que organize onde cada amostra está guardada e ajude a bancada a **encontrar rapidamente uma amostra** e a **decidir onde guardar uma amostra nova**.
-
-> ℹ️ **Sobre o nível:** este é um teste para uma vaga de **desenvolvedor(a) júnior**. Não esperamos que você entregue 100% dos itens. Foque em fazer bem os **Requisitos Obrigatórios**; os **Bônus** são para quem quiser se destacar. Avaliamos muito mais a **clareza do raciocínio e a organização do código** do que a quantidade de features.
-
-> 🤖 **Uso de IA:** você **pode usar ferramentas de IA** (ChatGPT, Copilot, Claude etc.) — elas fazem parte do dia a dia. O que realmente importa é que **você entenda tudo o que foi construído** e saiba **explicar suas escolhas** na conversa técnica. Vamos conversar sobre o código e as decisões, então esteja preparado(a) para justificar como e por que fez cada parte.
-
----
-
-## 🧊 Contexto e modelo de dados
-
-As amostras são guardadas seguindo uma **hierarquia física**:
-
-```
-Sala/Local  (ex.: "Pré-PCR", "Pós-PCR")
-  └── Freezer            (ex.: "-20°C Amostras", "-80°C")   → tem um limite máximo de gavetas
-        └── Gaveta/Rack                                     → tem um limite máximo de caixas
-              └── Caixa   (uma grade de posições)           → o tamanho é definido ao criar (linhas × colunas)
-                    └── Posição  (ex.: A1, B2 ...)          → guarda 1 microtubo (1 amostra) ou está livre
-```
-
-Cada **Caixa** é uma grade. O tamanho é **definido pelo usuário ao criar** — no nosso lab usamos caixas de vários tamanhos (ex.: `9×9`, `10×10`, e também caixas menores como `4×4` ou `8×8`). As posições são identificadas por **linha (letra) + coluna (número)**: `A1`, `A2`, ... `B1` ...
-
-Cada **Amostra / microtubo** tem, no mínimo:
-
-| Campo | Exemplo | Observações |
+| Módulo / Documento | Link de Acesso | Conteúdo |
 |---|---|---|
-| `codigo_amostra` | `A0100100049801` | identificador da amostra (**único**) |
-| `paciente_nome` | `CONTROLE NEO 136` | nome/identificação |
-| `concentracao_ng_ul` | `52.8` | concentração em ng/µL |
-| `material` | `DNA` / `Swab bucal` | tipo de material |
-| `exame` | `CONTROLE INTERNO` | exame associado (opcional) |
-| `observacao` | texto livre | opcional |
+| 🏛️ **Arquitetura & Banco de Dados** | [`docs/Arquitetura-e-Banco-de-Dados.md`](./docs/Arquitetura-e-Banco-de-Dados.md) | Visão geral da arquitetura Fullstack, Diagrama ERD do banco, dicionário de dados e regras relacionais |
+| 🖥️ **Frontend** | [`docs/Frontend-Documentation.md`](./docs/Frontend-Documentation.md) | Next.js 16, React 19, Design System, componentes, estado global, navegação mobile e testes |
+| ⚙️ **Backend** | [`docs/Backend-Documentation.md`](./docs/Backend-Documentation.md) | API Express, Prisma ORM, PostgreSQL (Supabase), Zod, autenticação JWT, algoritmo First-Fit e testes |
+| 🔄 **Fluxo de Dev (Desafio 2)** | [`docs/Fluxo-de-Desenvolvimento.md`](./docs/Fluxo-de-Desenvolvimento.md) | Git Flow (GitLab Flow), SemVer, esteira de releases, homologação, hotfix e rollback |
+| ⚙️ **Pipeline de CI/CD & Docker** | [`docs/Pipeline-CI-CD.md`](./docs/Pipeline-CI-CD.md) | GitHub Actions CI/CD, Docker multi-stage, jobs de teste, ESLint, build check e 2 camadas de defesa |
+| 📋 **Enunciado do Desafio** | [`docs/README-desafio.md`](./docs/README-desafio.md) | Requisitos e especificações originais do desafio técnico |
 
-### Sugestão de modelagem (opcional)
+---
 
-Como referência, as **entidades** e suas **relações** seguem a hierarquia física:
+## 🔄 Fluxo de Desenvolvimento & Git Flow (Desafio 2)
+
+O projeto adota uma variação simplificada e eficiente do **GitLab Flow**, combinada com o padrão de versionamento semântico **[SemVer](https://semver.org/)** (`MAJOR.MINOR.PATCH`):
 
 ```
-Sala 1─N Freezer 1─N Gaveta 1─N Caixa 1─N Posição 0..1─ Amostra
+feature/1 ──(PR)──> GitHub Actions CI ──(Merge)──> main ──(Tag SemVer)──> Homologação ──(Aprovação)──> Produção
 ```
 
-- **Sala** possui vários **Freezers**
-- **Freezer** possui várias **Gavetas**
-- **Gaveta** possui várias **Caixas**
-- **Caixa** possui várias **Posições** (definidas pelo tamanho linhas × colunas)
-- Cada **Posição** guarda **no máximo uma Amostra** (ou está livre)
+- **Branching Strategy**: O código instável de novas funcionalidades é desenvolvido em branches de feature (`feat/*` ou `fix/*`) e integrado à branch principal `main` exclusivamente através de **Pull Requests** com revisão por pares.
+- **Validação Automática em Duas Camadas**:
+  - **Local (Pre-commit)**: Roda os 41 testes unitários (Vitest) e linter (ESLint) antes do commit.
+  - **Nuvem (GitHub Actions CI)**: Workflow [`.github/workflows/ci.yaml`](./.github/workflows/ci.yaml) executa em containers Linux limpos a cada PR para bloquear código quebrado no repositório remoto.
+- **Homologação & Tagging**: Cada release gera um incremento de versão nos arquivos `.version` e `CHANGELOG.md` e dispara uma **Tag Git** (ex: `v1.1.0`), enviando o build para o ambiente de **Homologação**.
+- **Hotfix & Rollback**: *Hotfixes* seguem o fluxo contínuo a partir da `main` com tag PATCH (ex: `v1.1.1`). *Rollbacks* em produção são executados re-disparando o deploy a partir de uma tag estável anterior.
 
-> 🧩 A modelagem de campos, tipos e como você representa a **Posição** (tabela própria x calculada a partir do tamanho da caixa) é **livre** — construa a sua. Essa é uma das coisas que vamos conversar na entrevista.
-
----
-
-## 🛠️ Requisitos Obrigatórios
-
-1. **Cadastro da estrutura física (CRUD)**
-   - Criar/editar/remover **Salas**, **Freezers**, **Gavetas** e **Caixas**.
-   - Ao criar uma **Caixa**, o usuário **define o tamanho** (nº de linhas e nº de colunas).
-
-2. **Cadastro de amostras**
-   - Adicionar uma amostra ao sistema com os campos acima.
-
-3. **Sugestão automática de posição** ⭐ *(o coração do teste)*
-   - Ao adicionar uma amostra, o sistema deve **sugerir automaticamente uma posição livre** e informar o **caminho completo**: `Sala → Freezer → Gaveta → Caixa → Posição` (ex.: `Pré-PCR / -20°C / Gaveta 1 / CX-CONTROLE / C3`).
-   - Se **não houver nenhuma posição livre** nas caixas existentes, o sistema deve **avisar que é preciso abrir uma nova caixa** para poder alocar a amostra.
-   - **Regra de alocação (first-fit)** — implemente exatamente assim para não haver ambiguidade:
-     1. Percorra as caixas existentes numa ordem **determinística** (ex.: por data de criação, ou ordem alfabética do nome).
-     2. Dentro de uma caixa, percorra as posições em ordem **linha a linha** (`A1, A2, …, A{n}, B1, …`) e escolha a **primeira posição livre**.
-     3. Se a caixa estiver cheia, passe para a próxima; se **todas** estiverem cheias, retorne "**abrir nova caixa**".
-
-4. **Visualização para encontrar uma amostra**
-   - Pelo menos **uma** forma de listar/buscar as amostras e ver **onde cada uma está** (Sala/Freezer/Gaveta/Caixa/Posição).
-   - Pode ser **tabela** ou **lista** com busca por `codigo_amostra` ou `paciente_nome`.
-
-5. **README de execução**
-   - A aplicação roda localmente, com instruções claras de como subir back-end, front-end e banco.
+> 📖 **Para conferir as especificações completas:**
+> Acesse [`docs/Arquitetura-e-Banco-de-Dados.md`](./docs/Arquitetura-e-Banco-de-Dados.md) para a visão geral da solução, [`docs/Fluxo-de-Desenvolvimento.md`](./docs/Fluxo-de-Desenvolvimento.md) para o processo de trabalho e [`docs/Pipeline-CI-CD.md`](./docs/Pipeline-CI-CD.md) para os detalhes da esteira de CI/CD.
 
 ---
 
-## ⭐ Requisitos Bônus (diferenciais)
+## ⚡ Quick Start
 
-1. **Limites de capacidade**
-   - Definir **máximo de caixas por gaveta** e **máximo de gavetas por freezer**, e **impedir/avisar** quando o limite for atingido.
-   - Ao sugerir "abrir nova caixa", respeitar esses limites (sugerir em qual gaveta/freezer a nova caixa caberia).
+### 🐳 Opção 1: Execução Rápida via Docker Compose (Recomendado)
 
-2. **Visualização em MAPA** 🗺️ *(o bônus mais legal)*
-   - Uma forma **visual** de enxergar a estrutura como a bancada veria de verdade: uma caixa desenhada como grade, posições ocupadas x livres, e ao clicar numa posição ver a amostra.
-   - Use sua criatividade: mapa da caixa, "heatmap" de ocupação por freezer/gaveta, mini-mapa navegável. Surpreenda-nos.
+```bash
+# Subir todo o ambiente Fullstack (Backend + Frontend) em containers isolados
+docker compose up --build -d
 
-3. **Importação via CSV**
-   - Importar amostras a partir de um `.csv` (use o `amostras_exemplo.csv` como referência).
+# Visualizar os logs em tempo real
+docker compose logs -f
 
-4. **Autenticação**
-   - Login para acessar o sistema; ações de escrita exigem estar autenticado.
-
-5. **Busca/filtro avançado**
-   - Filtrar por freezer, gaveta, exame, material, ou posições livres.
-
----
-
-## 🔧 Requisitos Técnicos
-
-- Use o stack que preferir. Sugestões (não obrigatórias):
-  - **Front-end:** React, Vue.js ou Angular
-  - **Back-end:** Node/Express, Ruby on Rails, Python (FastAPI/Django) ou similar
-  - **Banco de dados:** PostgreSQL ou outro relacional
-- A aplicação deve rodar localmente com instruções claras no `README`.
-
----
-
-## 📦 Entrega
-
-1. Faça um **fork** deste repositório.
-2. Desenvolva sua solução em um branch chamado `develop`.
-3. Envie o **link do seu repositório** com instruções de execução no `README`.
-
----
-
-## 🚀 Segundo Desafio — Estratégia de CI/CD (apresentação)
-
-A segunda parte é uma **apresentação de até 15 minutos** (máximo **5 slides**), discutida numa chamada com os entrevistadores. **Não é para escrever código** — queremos entender **como você pensaria** o deploy dessa aplicação.
-
-**Descreva o fluxo de CI/CD que você montaria**, abordando:
-
-- **Estratégia de branches** (ex.: `main`/`develop`/`feature/*`, trunk-based, GitFlow — e por quê).
-- **Fluxo até produção**: o que acontece de um commit até o deploy? Quais ambientes (dev/staging/prod)?
-- **Pull Request: exige ou não?** Quem revisa? Precisa de aprovação?
-- **Testes: rodaria testes automatizados? Quais** (unit, integração, e2e, lint)? São **obrigatórios** para mergear/deployar, ou não? Por quê?
-- **O que o pipeline faria** em cada etapa (build, testes, deploy) e **como um deploy é disparado** (automático no merge? manual?).
-
-Pode usar slides ou diagramas. Não existe resposta única certa — queremos ver seu **raciocínio e as escolhas** (e trade-offs) que você faria para um time pequeno de laboratório.
-
-**Duração:** apresentação até 15 min + 5 min de perguntas.
-
----
-
-## ✅ Critérios de Avaliação
-
-- Clareza e organização do código
-- Boas práticas de desenvolvimento
-- Cobertura dos requisitos obrigatórios (e bônus, se houver)
-- Correção da **regra de sugestão de posição**
-- Facilidade de uso da interface (a bancada consegue achar uma amostra rápido?)
-- Capacidade de argumentação técnica na apresentação de CI/CD
-
----
-
-## 📄 Dados de exemplo
-
-Incluímos `amostras_exemplo.csv` — um recorte **real** (anonimizável) do nosso controle atual em planilha, já limpo em UTF-8. Colunas:
-
-```csv
-sala,freezer,gaveta,caixa,linhas,colunas,posicao,codigo_amostra,paciente_nome,concentracao_ng_ul,material,exame,observacao
+# Acessar a aplicação:
+# → Frontend: http://localhost:3000
+# → API Backend: http://localhost:3001
 ```
 
-Use-o para popular o sistema (seed) e/ou para testar a importação via CSV (bônus).
+---
+
+### 💻 Opção 2: Execução Local sem Docker
+
+#### 1. Subindo o Backend (API REST)
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+npx prisma migrate dev
+npm run seed
+npm run dev
+# → API rodando em http://localhost:3001
+```
+
+#### 2. Subindo o Frontend (Next.js)
+
+```bash
+cd frontend/devtest-frontend
+npm install
+npm run dev
+# → Aplicação rodando em http://localhost:3000
+```
 
 ---
 
-Para finalizar, faça o commit de todo o seu projeto no seu repositório **forkeado (bifurcado)** e nos envie o link junto à sua resposta. Boa sorte! 🍀
+## 🧪 Suíte de Testes Unitários & Qualidade (CI/CD)
+
+O projeto conta com **41 testes unitários** automatizados (20 no Backend e 21 no Frontend) e validação estática de código com ESLint.
+
+### Executando os Testes do Backend
+```bash
+cd backend
+npm test
+```
+
+### Executando os Testes do Frontend
+```bash
+cd frontend/devtest-frontend
+npm test
+```
+
+### Executando o Git Pre-Commit Hook (Qualidade Automática)
+O projeto utiliza a ferramenta `pre-commit` para rodar todos os testes e linters automaticamente antes de cada commit no Git:
+
+```bash
+# Instalar a ferramenta de hooks (se ainda não tiver)
+pip install pre-commit
+
+# Executar a verificação em todos os arquivos manualmente
+pre-commit run --all-files
+```
+
+---
+
+## 🏗️ Stack Tecnológico
+
+| Camada | Tecnologia |
+|---|---|
+| **Frontend Core** | Next.js 16 (App Router) + React 19 + TypeScript |
+| **Estilização UI** | Vanilla CSS + Tailwind CSS 4 Design Tokens + Montserrat Font |
+| **Testes Frontend** | Vitest 4 + React Testing Library + jsdom |
+| **Backend Core** | Node.js + Express 5 + TypeScript |
+| **Banco de Dados** | PostgreSQL (Supabase) + Prisma ORM 6 |
+| **Testes Backend** | Vitest 4 (Node environment) |
+| **Containerização** | Docker Multi-Stage Build + Docker Compose |
+| **Autenticação** | JWT (JSON Web Tokens) + bcryptjs |
+| **Validação** | Zod Schemas |
+| **Garantia de Qualidade** | Git Pre-commit Hooks + GitHub Actions CI + ESLint 9 |
+
+---
+
+## 📁 Estrutura do Repositório
+
+```
+neogenomica-devtest/
+├── docs/                         # Central de Documentações do Projeto
+│   ├── Arquitetura-e-Banco-de-Dados.md # Visão Geral Fullstack, Diagrama ERD e Dicionário de Dados
+│   ├── Backend-Documentation.md  # Especificação técnica do Backend
+│   ├── Frontend-Documentation.md # Especificação técnica do Frontend
+│   ├── Fluxo-de-Desenvolvimento.md # Git Flow, SemVer, releases, hotfix, rollback
+│   ├── Pipeline-CI-CD.md         # Especificação da esteira CI/CD (GitHub Actions + Docker)
+│   └── Neogenomica.excalidraw    # Diagrama de fluxo editável
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yaml               # Esteira de CI/CD do GitHub Actions
+│
+├── backend/                      # API REST Express + TypeScript
+│   ├── src/
+│   │   ├── controllers/          # Camada HTTP req/res
+│   │   ├── services/             # Regras de negócio e First-Fit
+│   │   ├── repositories/         # Acesso ao banco de dados (Prisma)
+│   │   ├── dtos/                 # Schemas Zod de validação
+│   │   ├── middlewares/          # Autenticação JWT e Tratamento Global de Erros
+│   │   ├── routes/               # Rotas HTTP
+│   │   └── __tests__/            # 20 Testes Unitários (Vitest)
+│   ├── Dockerfile                # Multi-stage Dockerfile do Backend
+│   └── prisma/                   # Schema Prisma, Migrações e Seed
+│
+├── frontend/                     # Aplicação Web Next.js 16 + React 19
+│   └── devtest-frontend/
+│       ├── Dockerfile            # Multi-stage Dockerfile do Frontend
+│       ├── .dockerignore         # Exclusões de build do Docker
+│       ├── app/                  # Rotas (Dashboard, Estrutura, Amostras, Mapa, Login)
+│       └── components/           # UI, Modais, BoxGrid, Sidebar Collapsible, MobileNav
+│
+├── docker-compose.yml            # Orquestrador de Containers (Backend + Frontend)
+├── .pre-commit-config.yaml       # Configuração dos Hooks Git de Pre-Commit
+├── README.md                     # Visão Geral do Projeto
+└── amostras_exemplo.csv          # Dados de exemplo do laboratório
+```
+
+---
+
+## 🧊 Hierarquia Física do Laboratório
+
+O sistema respeita rigorosamente a estrutura física do laboratório:
+
+```
+Sala  →  Freezer  →  Gaveta  →  Caixa (grade N×M)  →  Posição (A1, B3...)  →  Amostra (Microtubo)
+```
+
+---
+
+## ✨ Funcionalidades Principais
+
+- **🎯 Sugestão Inteligente (First-Fit)**: Encontra automaticamente a primeira posição livre no estoque laboratorial seguindo a ordem de cadastro.
+- **🗺️ Mapa Visual Interativo**: Renderiza uma grade $N \times M$ com status de ocupação, cores por material e tooltips informativos.
+- **📥 Importação em Lote via CSV**: Drag-and-drop de arquivos `.csv` com processamento idempotente sem duplicar estruturas.
+- **📱 Responsividade Híbrida**: Sidebar fixo/comprimível no Desktop e **Mobile Bottom Navigation Bar** estilo aplicativo em celulares.
+- **🐳 Containerização de Produção**: Suporte completo a Docker Multi-Stage e Docker Compose para execução isolada e reprodutível.
+- **🛡️ Qualidade & Segurança**: Autenticação JWT, Pre-commit e GitHub Actions CI com **41 testes unitários** protegendo a aplicação contra regressões.
+
+---
+
+## 👤 Autor
+
+**Pedro Cezar** — Desenvolvedor Fullstack
+*Processo Seletivo NeoGenomica 2026*

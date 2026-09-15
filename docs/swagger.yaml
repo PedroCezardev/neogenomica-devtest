@@ -1,0 +1,234 @@
+openapi: 3.0.3
+info:
+  title: NeoGenomica API
+  description: Especificação OpenAPI 3.0 para a API de Gestão Bioinformática de Microtubos de DNA
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001/api
+    description: Servidor de Desenvolvimento Local
+
+paths:
+  /auth/register:
+    post:
+      summary: Registrar novo usuário
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nome, email, senha]
+              properties:
+                nome: { type: string }
+                email: { type: string, format: email }
+                senha: { type: string, minLength: 6 }
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+        '409':
+          description: E-mail já cadastrado
+
+  /auth/login:
+    post:
+      summary: Autenticar usuário e obter JWT
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, senha]
+              properties:
+                email: { type: string, format: email }
+                senha: { type: string }
+      responses:
+        '200':
+          description: Token JWT retornado
+        '401':
+          description: Credenciais inválidas
+
+  /salas:
+    get:
+      summary: Listar todas as salas
+      tags: [Salas]
+      responses:
+        '200':
+          description: Lista de salas cadastradas
+    post:
+      summary: Criar nova sala
+      tags: [Salas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nome]
+              properties:
+                nome: { type: string }
+      responses:
+        '201':
+          description: Sala criada com sucesso
+
+  /freezers:
+    get:
+      summary: Listar todos os freezers
+      tags: [Freezers]
+      responses:
+        '200':
+          description: Lista de freezers com salas vinculadas
+    post:
+      summary: Criar novo freezer
+      tags: [Freezers]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nome, salaId]
+              properties:
+                nome: { type: string }
+                salaId: { type: integer }
+                maxGavetas: { type: integer, nullable: true }
+      responses:
+        '201':
+          description: Freezer criado com sucesso
+
+  /gavetas:
+    get:
+      summary: Listar todas as gavetas
+      tags: [Gavetas]
+      responses:
+        '200':
+          description: Lista de gavetas com hierarquia
+    post:
+      summary: Criar nova gaveta
+      tags: [Gavetas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nome, freezerId]
+              properties:
+                nome: { type: string }
+                freezerId: { type: integer }
+                maxCaixas: { type: integer, nullable: true }
+      responses:
+        '201':
+          description: Gaveta criada com sucesso
+
+  /caixas:
+    get:
+      summary: Listar todas as caixas
+      tags: [Caixas]
+      responses:
+        '200':
+          description: Lista de caixas com dimensões N x M
+    post:
+      summary: Criar nova caixa
+      tags: [Caixas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nome, gavetaId, linhas, colunas]
+              properties:
+                nome: { type: string }
+                gavetaId: { type: integer }
+                linhas: { type: integer, minimum: 1, maximum: 26 }
+                colunas: { type: integer, minimum: 1, maximum: 50 }
+      responses:
+        '201':
+          description: Caixa criada com sucesso
+
+  /caixas/{id}/mapa:
+    get:
+      summary: Obter a grade visual N x M e amostras da caixa
+      tags: [Caixas]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Grade visual montada com posições livres e ocupadas
+
+  /amostras:
+    get:
+      summary: Listar e filtrar amostras
+      tags: [Amostras]
+      parameters:
+        - name: busca
+          in: query
+          schema: { type: string }
+        - name: material
+          in: query
+          schema: { type: string }
+        - name: freezerId
+          in: query
+          schema: { type: integer }
+        - name: gavetaId
+          in: query
+          schema: { type: integer }
+        - name: caixaId
+          in: query
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Lista de amostras filtradas
+    post:
+      summary: Cadastrar nova amostra
+      tags: [Amostras]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [pacienteNome, material, posicao, caixaId]
+              properties:
+                codigoAmostra: { type: string, nullable: true }
+                pacienteNome: { type: string }
+                concentracaoNgUl: { type: number, nullable: true }
+                material: { type: string }
+                exame: { type: string, nullable: true }
+                observacao: { type: string, nullable: true }
+                posicao: { type: string }
+                caixaId: { type: integer }
+      responses:
+        '201':
+          description: Amostra criada com sucesso
+
+  /amostras/sugerir-posicao:
+    get:
+      summary: Executar algoritmo First-Fit para sugerir primeira vaga livre
+      tags: [Amostras]
+      responses:
+        '200':
+          description: Posição livre encontrada com caminho físico completo ou sugestão de expansão
+
+  /amostras/importar:
+    post:
+      summary: Importar amostras em lote via arquivo CSV
+      tags: [Amostras]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                arquivo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Relatório de importação com contagem de importadas e ignoradas
